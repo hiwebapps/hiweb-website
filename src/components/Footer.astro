@@ -1,0 +1,225 @@
+---
+const social = [
+  {
+    href: 'https://instagram.com/hiweb.mx/',
+    label: 'Instagram',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 16a4 4 0 1 0 0-8a4 4 0 0 0 0 8Z"/><path d="M3 16V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5Z"/><path stroke-linecap="round" stroke-linejoin="round" d="m17.5 6.51l.01-.011"/></svg>`,
+  },
+  {
+    href: 'https://www.linkedin.com/company/hiweb-marketing/',
+    label: 'LinkedIn',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5ZM7 17v-7"/><path d="M11 17v-3.25M11 10v3.75m0 0c0-3.75 6-3.75 6 0V17M7 7.01l.01-.011"/></svg>`,
+  },
+  {
+    href: 'https://www.tiktok.com/@hiwebmx',
+    label: 'TikTok',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5Z"/><path d="M16 3c0 2.5 1.5 4 4 4v2c-3 0-5-1.5-5-5h-3v12a4 4 0 1 1-2-3.465V7h3V3h3Z"/></svg>`,
+  },
+  {
+    href: 'https://www.facebook.com/people/Hiweb/100063716177220/',
+    label: 'Facebook',
+    icon: `<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M21 8v8a5 5 0 0 1-5 5H8a5 5 0 0 1-5-5V8a5 5 0 0 1 5-5h8a5 5 0 0 1 5 5Z"/><path d="M11 21v-9c0-2.188.5-4 4-4m-6 5h6"/></svg>`,
+  },
+];
+
+const services = [
+  { href: '/servicios/agencia-posicionamiento-seo', label: 'SEO' },
+  { href: '/servicios/diseno-desarrollo-web-mexico', label: 'Desarrollo Web' },
+  { href: '/servicios/agencia-redes-sociales', label: 'Redes Sociales' },
+  { href: '/servicios/meta-ads-publicidad-redes-sociales', label: 'Publicidad en Redes' },
+];
+---
+
+<footer class="footer">
+  <div class="padding-global">
+    <div class="container-large">
+      <img src="/images/footer-line.svg" alt="" class="footer__line" width="1200" height="2" />
+
+      <div class="footer__inner">
+        <div class="footer__top">
+          <div class="footer__brand">
+            <a href="/" class="footer__brand-link">Hiweb Marketing</a>
+            <p class="footer__blurb">
+              <strong>Hiweb Marketing</strong> es tu
+              <a href="/"><strong>agencia de marketing digital</strong></a>
+              en México. Ofrecemos soluciones personalizadas en Redes Sociales, SEO, Diseño web, SEM y más, para
+              impulsar el crecimiento de tu negocio online.
+            </p>
+          </div>
+
+          <div class="footer__menus">
+            <div class="footer__col">
+              <p class="footer__heading">Contáctanos</p>
+              <a href="tel:9995602388" class="footer__link"><strong>999-560-2388</strong></a>
+              <a
+                href="mailto:info@hiwebmarketing.com?subject=Hola!%20Me%20gustar%C3%ADa%20obtener%20ayuda"
+                class="footer__link"
+              >
+                <strong>admin@hiwebmarketing.com</strong>
+              </a>
+            </div>
+
+            <div class="footer__col">
+              <p class="footer__heading">Servicios</p>
+              {
+                services.map((item) => (
+                  <a href={item.href} class="footer__link">
+                    <strong>{item.label}</strong>
+                  </a>
+                ))
+              }
+            </div>
+
+            <div class="footer__col">
+              <p class="footer__heading">Redes Sociales</p>
+              {
+                social.map((item) => (
+                  <a href={item.href} class="footer__social" target="_blank" rel="noopener noreferrer">
+                    <span class="footer__social-icon" set:html={item.icon} />
+                    <span>{item.label}</span>
+                  </a>
+                ))
+              }
+            </div>
+
+            <div class="footer__col">
+              <p class="footer__heading">Presencia</p>
+              <a href="/estados/agencia-de-marketing-digital-en-cancun" class="footer__link">
+                <strong>Cancún</strong>
+              </a>
+              <a href="/estados/agencia-de-marketing-digital-en-monterrey" class="footer__link">
+                <strong>Monterrey</strong>
+              </a>
+            </div>
+
+            <div class="footer__col">
+              <p class="footer__heading">Idiomas</p>
+              <a href="/" hreflang="es-MX" class="footer__link">Español</a>
+              <a href="/en" hreflang="en-US" class="footer__link">English</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <img src="/images/footer-line.svg" alt="" class="footer__line" width="1200" height="2" />
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background-color: var(--color-black);
+    color: var(--color-white);
+    padding-top: 40px;
+    background-image:
+      radial-gradient(circle at -6% 0, #ffc10733, #ffc10700 52%),
+      radial-gradient(circle farthest-side at 100% 0, #03a9f433, #03a9f400 35%),
+      radial-gradient(circle, #673ab733, #673ab700 40%);
+  }
+
+  .footer__line {
+    width: 100%;
+    height: auto;
+    opacity: 0.8;
+  }
+
+  .footer__inner {
+    padding: 3rem 0 2rem;
+  }
+
+  .footer__top {
+    display: grid;
+    grid-template-columns: 0.75fr 1fr;
+    gap: 2.5rem;
+  }
+
+  .footer__brand-link {
+    display: inline-block;
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+    font-weight: var(--fw-semibold);
+    color: var(--color-white);
+  }
+
+  .footer__blurb {
+    margin: 0;
+    color: var(--color-off-white);
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    max-width: 28rem;
+  }
+
+  .footer__blurb a {
+    text-decoration: underline;
+  }
+
+  .footer__menus {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .footer__col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .footer__heading {
+    margin: 0 0 1rem;
+    font-size: var(--text-sm);
+    font-weight: var(--fw-bold);
+    color: var(--color-white);
+  }
+
+  .footer__link {
+    display: block;
+    padding: 0.5rem 0;
+    font-size: var(--text-sm);
+    color: var(--color-off-white);
+  }
+
+  .footer__link:hover {
+    color: var(--color-white);
+  }
+
+  .footer__social {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    font-size: var(--text-sm);
+    color: var(--color-off-white);
+  }
+
+  .footer__social:hover {
+    color: var(--color-white);
+  }
+
+  .footer__social-icon {
+    width: 1rem;
+    height: 1rem;
+    display: inline-flex;
+  }
+
+  .footer__social-icon :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 991px) {
+    .footer__top {
+      grid-template-columns: 1fr;
+    }
+
+    .footer__menus {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media (max-width: 767px) {
+    .footer__menus {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

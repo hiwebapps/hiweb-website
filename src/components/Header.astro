@@ -1,0 +1,439 @@
+---
+import Button from './Button.astro';
+
+const pathname = Astro.url.pathname;
+
+const services = [
+  {
+    heading: 'Crece tu negocio Y RESALTA TU MARCA',
+    links: [
+      {
+        href: '/servicios/agencia-redes-sociales',
+        title: 'Redes Sociales',
+        description: 'Crecimiento estratégico en redes sociales.',
+      },
+      {
+        href: '/servicios/agencia-posicionamiento-seo',
+        title: 'Posicionamiento SEO',
+        description: 'Posiciona tu marca en Google y en chats de IA.',
+      },
+      {
+        href: '/servicios/promocion-google-ads',
+        title: 'Publicidad en Google',
+        description: 'Campañas de búsqueda, Performance Max y remarketing.',
+      },
+      {
+        href: '/servicios/meta-ads-publicidad-redes-sociales',
+        title: 'Publicidad en Redes',
+        description: 'Prospecting, lookalikes y retargeting en Meta.',
+      },
+      {
+        href: '/servicios/branding',
+        title: 'Identidad de Marca & Branding',
+        description: 'Marcas claras, sólidas y memorables.',
+      },
+    ],
+  },
+  {
+    heading: 'Automatiza, optimiza y convierte',
+    links: [
+      {
+        href: '/servicios/crm-automatizacion-empresas',
+        title: 'CRM & Automatización',
+        description: 'Leads → nurturing → ventas con procesos claros.',
+      },
+      {
+        href: '/servicios/community-manager',
+        title: 'Community Manager',
+        description: 'Gestión estratégica de comunidad.',
+      },
+      {
+        href: '/servicios/ia-marketing',
+        title: 'IA Marketing',
+        description: 'Chatbots, flujos y análisis predictivo.',
+      },
+    ],
+  },
+  {
+    heading: 'Sitios web que venden',
+    links: [
+      {
+        href: '/servicios/diseno-desarrollo-web-mexico',
+        title: 'Diseño y Desarrollo Web',
+        description: 'Cada línea de código está orientada a tus objetivos de negocio.',
+      },
+    ],
+  },
+];
+
+const isHome = pathname === '/' || pathname === '';
+---
+
+<header class="nav" data-nav>
+  <div class="nav__glass" aria-hidden="true"></div>
+  <div class="nav__tint" aria-hidden="true"></div>
+
+  <div class="nav__bar">
+    <a href="/" class:list={['nav__brand', { 'is-current': isHome }]} aria-label="Hiweb inicio">
+      <img
+        src="/images/isotipo-20hiweb.png"
+        width="27"
+        height="27"
+        alt=""
+        class="nav__logo"
+      />
+      <span class="nav__brand-text">Hiweb</span>
+    </a>
+
+    <button
+      type="button"
+      class="nav__burger"
+      data-nav-toggle
+      aria-expanded="false"
+      aria-controls="nav-menu"
+      aria-label="Abrir menú"
+    >
+      <span class="nav__burger-line"></span>
+      <span class="nav__burger-line"></span>
+      <span class="nav__burger-line"></span>
+    </button>
+
+    <nav class="nav__menu" id="nav-menu" data-nav-menu>
+      <ul class="nav__links">
+        <li class="nav__item nav__item--dropdown" data-dropdown>
+          <button type="button" class="nav__link nav__link--toggle" data-dropdown-toggle aria-expanded="false">
+            Servicios
+            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+              <path
+                d="M10.293,3.293,6,7.586,1.707,3.293A1,1,0,0,0,.293,4.707l5,5a1,1,0,0,0,1.414,0l5-5a1,1,0,1,0-1.414-1.414Z"
+                fill="currentColor"></path>
+            </svg>
+          </button>
+          <div class="nav__dropdown" data-dropdown-panel hidden>
+            {
+              services.map((section) => (
+                <div class="nav__dropdown-section">
+                  <p class="nav__dropdown-heading">{section.heading}</p>
+                  <ul class="nav__dropdown-list">
+                    {section.links.map((link) => (
+                      <li>
+                        <a href={link.href} class="nav__dropdown-link">
+                          <span class="nav__dropdown-title">{link.title}</span>
+                          <span class="nav__dropdown-desc">{link.description}</span>
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
+            }
+          </div>
+        </li>
+        <li class="nav__item">
+          <a href="/portafolio" class="nav__link">Casos de Éxito</a>
+        </li>
+        <li class="nav__item">
+          <a href="/blogs" class="nav__link">Blog</a>
+        </li>
+      </ul>
+
+      <div class="nav__ctas">
+        <Button href="https://wa.link/001xi3" variant="whatsapp" target="_blank">WhatsApp</Button>
+        <Button href="/contacto" variant="primary">Agenda tu Auditoría</Button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<script>
+  function initNav() {
+    const root = document.querySelector('[data-nav]');
+    if (!root) return;
+
+    const toggle = root.querySelector('[data-nav-toggle]');
+    const menu = root.querySelector('[data-nav-menu]');
+    const dropdown = root.querySelector('[data-dropdown]');
+    const dropdownToggle = root.querySelector('[data-dropdown-toggle]');
+    const dropdownPanel = root.querySelector('[data-dropdown-panel]');
+
+    toggle?.addEventListener('click', () => {
+      const open = root.classList.toggle('is-open');
+      toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+    });
+
+    dropdownToggle?.addEventListener('click', () => {
+      const isHidden = dropdownPanel?.hasAttribute('hidden');
+      if (isHidden) {
+        dropdownPanel?.removeAttribute('hidden');
+        dropdown?.classList.add('is-open');
+        dropdownToggle.setAttribute('aria-expanded', 'true');
+      } else {
+        dropdownPanel?.setAttribute('hidden', '');
+        dropdown?.classList.remove('is-open');
+        dropdownToggle.setAttribute('aria-expanded', 'false');
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      if (!dropdown?.contains(event.target as Node)) {
+        dropdownPanel?.setAttribute('hidden', '');
+        dropdown?.classList.remove('is-open');
+        dropdownToggle?.setAttribute('aria-expanded', 'false');
+      }
+    });
+  }
+
+  document.addEventListener('astro:page-load', initNav);
+  initNav();
+</script>
+
+<style>
+  .nav {
+    position: sticky;
+    top: var(--nav-top);
+    z-index: var(--nav-z);
+    margin: 0 4%;
+    border-radius: var(--radius-full);
+    overflow: visible;
+    box-shadow:
+      0 0 20px #0000001a,
+      0 6px 6px #0003;
+  }
+
+  .nav__glass,
+  .nav__tint {
+    position: absolute;
+    inset: 0;
+    border-radius: 8rem;
+    pointer-events: none;
+  }
+
+  .nav__glass {
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+  }
+
+  .nav__tint {
+    background-color: #0009;
+  }
+
+  .nav__bar {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    max-width: var(--container-max);
+    min-height: var(--nav-min-height);
+    margin: 0 auto;
+    padding: 0 1rem;
+    border: 2px solid var(--color-white);
+    border-radius: var(--radius-md);
+    background-color: var(--color-black);
+  }
+
+  .nav__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-white);
+    padding: 15px 0;
+    font-size: 2rem;
+  }
+
+  .nav__logo {
+    width: 26.5px;
+    height: auto;
+  }
+
+  .nav__brand-text {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: var(--fw-medium);
+    line-height: 1;
+  }
+
+  .nav__burger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+    width: 48px;
+    height: 48px;
+    padding: 10px 16px;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .nav__burger-line {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: var(--color-white);
+    border-radius: 2px;
+    transition: transform 0.2s, opacity 0.2s;
+  }
+
+  .nav.is-open .nav__burger-line:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .nav.is-open .nav__burger-line:nth-child(2) {
+    opacity: 0;
+  }
+
+  .nav.is-open .nav__burger-line:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+
+  .nav__menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    flex: 1;
+  }
+
+  .nav__links {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .nav__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 16px 12px;
+    color: var(--color-white);
+    font-weight: var(--fw-medium);
+    font-size: var(--text-base);
+    background: none;
+    border: 0;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .nav__link:hover {
+    color: var(--color-primary);
+  }
+
+  .nav__item--dropdown {
+    position: relative;
+  }
+
+  .nav__dropdown {
+    position: absolute;
+    top: calc(100% + 0.75rem);
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(14rem, 1fr));
+    gap: 1.5rem;
+    min-width: 42rem;
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    background: var(--color-black);
+    border: 1px solid #ffffff26;
+    box-shadow: 0 16px 40px #00000066;
+  }
+
+  .nav__dropdown-heading {
+    margin: 0 0 0.75rem;
+    font-size: 0.7rem;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-gris);
+  }
+
+  .nav__dropdown-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .nav__dropdown-link {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+    color: var(--color-white);
+  }
+
+  .nav__dropdown-link:hover {
+    background: #ffffff14;
+  }
+
+  .nav__dropdown-title {
+    font-weight: var(--fw-semibold);
+    font-size: 0.95rem;
+  }
+
+  .nav__dropdown-desc {
+    font-size: 0.8rem;
+    color: var(--color-off-white);
+    line-height: 1.4;
+  }
+
+  .nav__ctas {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .nav__ctas :global(.btn--primary) {
+    width: auto;
+    min-width: 220px;
+  }
+
+  @media (max-width: 991px) {
+    .nav__burger {
+      display: flex;
+    }
+
+    .nav__menu {
+      display: none;
+      position: absolute;
+      top: calc(100% + 0.5rem);
+      left: 0;
+      right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 1rem;
+      border-radius: var(--radius-md);
+      background: var(--color-black);
+      border: 2px solid var(--color-white);
+    }
+
+    .nav.is-open .nav__menu {
+      display: flex;
+    }
+
+    .nav__links {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .nav__dropdown {
+      position: static;
+      min-width: 0;
+      grid-template-columns: 1fr;
+      margin-top: 0.5rem;
+      box-shadow: none;
+    }
+
+    .nav__ctas {
+      flex-direction: column;
+      margin-top: 0.75rem;
+    }
+
+    .nav__ctas :global(.btn) {
+      width: 100%;
+    }
+  }
+</style>

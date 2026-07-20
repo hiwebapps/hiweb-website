@@ -1,0 +1,146 @@
+---
+import { sanityClient } from 'sanity:client';
+import Layout from '../../layouts/Layout.astro';
+import PortableText from '../../components/PortableText.astro';
+import { postBySlugQuery, postSlugsQuery } from '../../sanity/queries';
+import { urlFor } from '../../sanity/image';
+
+export async function getStaticPaths() {
+  return await sanityClient.fetch(postSlugsQuery);
+}
+
+const { slug } = Astro.params;
+const post = await sanityClient.fetch(postBySlugQuery, { slug });
+
+if (!post) {
+  return Astro.redirect('/blogs');
+}
+
+const title = post.metaTitle ?? `${post.title} | Hiweb Marketing`;
+const description = post.metaDescription ?? post.excerpt ?? '';
+const ogImage = post.ogImage
+  ? urlFor(post.ogImage).width(1200).height(630).url()
+  : post.mainImage
+    ? urlFor(post.mainImage).width(1200).height(630).url()
+    : undefined;
+---
+
+<Layout title={title} description={description} ogImage={ogImage}>
+  <article class="post">
+    <div class="padding-global">
+      <div class="container-large post__inner">
+        <a href="/blogs" class="back">← Blog</a>
+        <header class="post__header">
+          {
+            post.categories?.length ? (
+              <p class="cats">{post.categories.map((c) => c?.title).filter(Boolean).join(' · ')}</p>
+            ) : null
+          }
+          <h1>{post.title}</h1>
+          <div class="meta">
+            {post.author?.name ? <span>{post.author.name}</span> : null}
+            {
+              post.publishedAt ? (
+                <time datetime={post.publishedAt}>
+                  {new Date(post.publishedAt).toLocaleDateString('es-MX', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                  })}
+                </time>
+              ) : null
+            }
+          </div>
+        </header>
+
+        {
+          post.mainImage ? (
+            <img
+              src={urlFor(post.mainImage).width(1200).height(675).url()}
+              alt={post.mainImage.alt ?? post.title}
+              class="post__hero"
+              width="1200"
+              height="675"
+            />
+          ) : null
+        }
+
+        {post.body ? <PortableText value={post.body} class="post__body" /> : null}
+      </div>
+    </div>
+  </article>
+</Layout>
+
+<style>
+  .post {
+    padding: 3rem 0 5rem;
+    color: var(--color-white);
+  }
+
+  .post__inner {
+    max-width: 48rem;
+  }
+
+  .back {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    color: var(--color-gris);
+    font-size: var(--text-sm);
+  }
+
+  .back:hover {
+    color: var(--color-primary);
+  }
+
+  .cats {
+    margin: 0 0 0.75rem;
+    color: var(--color-primary);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  h1 {
+    margin: 0 0 1rem;
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+
+  .meta {
+    display: flex;
+    gap: 1rem;
+    color: var(--color-off-white);
+    font-size: var(--text-sm);
+    margin-bottom: 2rem;
+  }
+
+  .post__hero {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    margin-bottom: 2rem;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
+
+  .portable-text :global(p) {
+    margin: 0 0 1.25rem;
+    line-height: 1.75;
+    color: var(--color-off-white);
+  }
+
+  .portable-text :global(h2),
+  .portable-text :global(h3) {
+    margin: 2rem 0 0.75rem;
+    color: var(--color-white);
+  }
+
+  .portable-text :global(a) {
+    color: var(--color-primary);
+  }
+
+  .portable-text :global(ul),
+  .portable-text :global(ol) {
+    margin: 0 0 1.25rem;
+    padding-left: 1.25rem;
+    color: var(--color-off-white);
+  }
+</style>

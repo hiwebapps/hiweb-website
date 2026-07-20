@@ -1,0 +1,50 @@
+---
+import { PortableText as PortableTextRenderer } from 'astro-portabletext';
+
+interface Props {
+  value: unknown;
+  class?: string;
+}
+
+const { value, class: className = '' } = Astro.props;
+---
+
+{
+  value ? (
+    <div class:list={['portable-text', className]}>
+      {/* @ts-expect-error Portable Text value typing varies by schema */}
+      <PortableTextRenderer value={value} />
+    </div>
+  ) : null
+}
+
+<style>
+  .portable-text :global(p) {
+    margin: 0 0 1.25rem;
+    line-height: 1.75;
+  }
+
+  .portable-text :global(h2),
+  .portable-text :global(h3),
+  .portable-text :global(h4) {
+    margin: 2rem 0 0.75rem;
+    font-family: var(--font-heading);
+    line-height: 1.2;
+  }
+
+  .portable-text :global(ul),
+  .portable-text :global(ol) {
+    margin: 0 0 1.25rem;
+    padding-left: 1.25rem;
+  }
+
+  .portable-text :global(a) {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  .portable-text :global(img) {
+    border-radius: var(--radius-md);
+    margin: 1.5rem 0;
+  }
+</style>

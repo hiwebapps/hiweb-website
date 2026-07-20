@@ -37,7 +37,7 @@ npm run dev
 
 - [x] Fase 0 — MCPs, skills, repo GitHub  
 - [x] Fase 1 — Scaffold Astro + Sanity + GSAP  
-- [ ] Fase 2 — Export Webflow + design tokens  
-- [ ] Fase 3 — Schemas + Studio + contenido de prueba  
+- [x] Fase 2 — Export Webflow + design tokens + Header/Footer  
+- [x] Fase 3 — Schemas + Studio + contenido de prueba  
 - [ ] Fase 4 — Home pixel-perfect + blog  
 - [ ] Fase 5 — Deploy Vercel + workflow editorial  

@@ -1,0 +1,51 @@
+---
+interface Props {
+  variant?: 'default' | 'white' | 'alt' | 'gradient';
+  class?: string;
+  as?: 'section' | 'div';
+}
+
+const { variant = 'default', class: className = '', as: Tag = 'section' } = Astro.props;
+---
+
+<Tag class:list={['section-wrapper', `section-wrapper--${variant}`, className]}>
+  <div class="padding-global">
+    <div class="container-large">
+      <slot />
+    </div>
+  </div>
+</Tag>
+
+<style>
+  .section-wrapper {
+    width: 100%;
+  }
+
+  .section-wrapper--default {
+    padding-top: var(--space-section);
+    padding-bottom: var(--space-section);
+    background-color: var(--color-page-bg);
+    color: var(--color-white);
+  }
+
+  .section-wrapper--white {
+    padding-top: var(--space-section-sm);
+    padding-bottom: var(--space-section-sm);
+    background-color: var(--color-casi-blanco);
+    color: var(--color-text);
+  }
+
+  .section-wrapper--alt {
+    padding-top: var(--space-section-sm);
+    padding-bottom: var(--space-section-sm);
+    background-color: var(--color-section-alt);
+    color: var(--color-text);
+  }
+
+  .section-wrapper--gradient {
+    padding-top: var(--space-section-sm);
+    padding-bottom: var(--space-section-sm);
+    background-color: var(--color-black);
+    color: var(--color-white);
+  }
+</style>

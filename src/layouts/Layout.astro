@@ -1,4 +1,8 @@
 ---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
 interface Props {
   title?: string;
   description?: string;
@@ -10,7 +14,7 @@ const {
   title = 'Hiweb Marketing',
   description = 'Agencia de marketing digital en México',
   canonical,
-  ogImage,
+  ogImage = '/images/isotipo-20con-20degradado-2.png',
 } = Astro.props;
 
 const siteUrl = Astro.site ?? 'https://www.hiwebmarketing.com';
@@ -18,22 +22,57 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
 ---
 
 <!doctype html>
-<html lang="es">
+<html lang="es-MX">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="alternate" hrefLang="x-default" href="https://www.hiwebmarketing.com/" />
+    <link rel="alternate" hrefLang="es-MX" href="https://www.hiwebmarketing.com/" />
+    <link rel="alternate" hrefLang="en-US" href="https://www.hiwebmarketing.com/en" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/isotipo-20con-20degradado.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/images/isotipo-20con-20degradado-1.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/isotipo-20con-20degradado-2.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/app-icon.png" />
+
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalUrl} />
-    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:image" content={new URL(ogImage, siteUrl).href} />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
   <body>
-    <slot />
+    <div class="page-wrapper">
+      <Header />
+      <main class="main-wrapper">
+        <slot />
+      </main>
+      <Footer />
+    </div>
   </body>
 </html>
+
+<style>
+  .page-wrapper {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .main-wrapper {
+    flex: 1;
+    width: 100%;
+  }
+</style>

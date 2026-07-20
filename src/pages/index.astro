@@ -1,49 +1,84 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import '../styles/global.css';
+import Button from '../components/Button.astro';
+import SectionWrapper from '../components/SectionWrapper.astro';
 ---
 
-<Layout title="Hiweb Marketing | Migración en progreso">
-  <main class="scaffold">
-    <p class="eyebrow">Fase 1 · Scaffold listo</p>
-    <h1>Hiweb Marketing</h1>
-    <p>
-      Stack: Astro + Sanity + GSAP + Vercel. Studio embebido en
-      <a href="/admin">/admin</a>.
-    </p>
-  </main>
+<Layout
+  title="Digital Marketing Agency in Mexico | Hiweb"
+  description="Agencia de marketing digital en México. SEO, Ads, redes sociales y desarrollo web con resultados medibles."
+>
+  <SectionWrapper variant="default">
+    <div class="phase2-preview">
+      <p class="eyebrow">Fase 2 · Design system</p>
+      <h1>Tokens, Header, Footer y Buttons listos</h1>
+      <p class="lede">
+        Extraídos del export de Webflow en <code>reference/webflow/</code>. La home pixel-perfect llega en la Fase 4;
+        aquí validamos la cáscara del sitio.
+      </p>
+      <div class="actions">
+        <Button href="/contacto" variant="primary">Agenda tu Auditoría</Button>
+        <Button href="https://wa.link/001xi3" variant="whatsapp" target="_blank">WhatsApp</Button>
+        <Button href="/contacto" variant="teal">CTA teal</Button>
+      </div>
+    </div>
+  </SectionWrapper>
+
+  <SectionWrapper variant="white">
+    <div class="phase2-preview dark-text">
+      <h2>Sección blanca (casi-blanco #fafafa)</h2>
+      <p>Misma tipografía Plus Jakarta Sans y contenedor max-width 80rem que el sitio actual.</p>
+    </div>
+  </SectionWrapper>
 </Layout>
 
 <style>
-  .scaffold {
-    min-height: 100vh;
-    display: grid;
-    place-content: center;
-    gap: 0.75rem;
-    padding: 2rem;
-    text-align: center;
+  .phase2-preview {
+    max-width: 40rem;
+    padding: 4rem 0;
   }
 
   .eyebrow {
-    margin: 0;
-    font-size: 0.875rem;
+    margin: 0 0 0.75rem;
+    font-size: var(--text-sm);
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--color-muted);
+    color: var(--color-gris);
+  }
+
+  h1,
+  h2 {
+    margin: 0 0 1rem;
   }
 
   h1 {
-    margin: 0;
-    font-family: var(--font-heading);
-    font-size: clamp(2rem, 5vw, 3rem);
+    font-size: clamp(2rem, 5vw, var(--text-h1));
+    color: var(--color-white);
   }
 
-  p {
-    margin: 0;
-    max-width: 36rem;
+  .lede {
+    margin: 0 0 2rem;
+    color: var(--color-off-white);
   }
 
-  a {
-    text-decoration: underline;
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .dark-text h2 {
+    color: var(--color-text);
+    font-size: clamp(1.5rem, 3vw, var(--text-h2));
+  }
+
+  .dark-text p {
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  code {
+    font-size: 0.9em;
+    color: var(--color-primary);
   }
 </style>

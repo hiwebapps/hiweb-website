@@ -1,0 +1,112 @@
+---
+interface Props {
+  href: string;
+  variant?: 'primary' | 'secondary' | 'whatsapp' | 'teal';
+  target?: string;
+  class?: string;
+}
+
+const {
+  href,
+  variant = 'primary',
+  target,
+  class: className = '',
+} = Astro.props;
+
+const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
+---
+
+<a
+  href={href}
+  target={target}
+  rel={rel}
+  class:list={['btn', `btn--${variant}`, className]}
+>
+  <span class="btn__label"><slot /></span>
+  {
+    variant === 'primary' || variant === 'teal' ? (
+      <span class="btn__icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path
+            d="M5 12H19M19 12L13 6M19 12L13 18"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+    ) : null
+  }
+</a>
+
+<style>
+  .btn {
+    font-family: var(--font-button);
+    font-weight: var(--fw-medium);
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+      box-shadow 0.3s,
+      background-color 0.2s,
+      color 0.2s;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .btn--primary,
+  .btn--teal {
+    gap: 8px;
+    color: var(--color-white);
+    background-color: var(--color-cta);
+    border: 2px solid var(--color-cta);
+    border-radius: var(--radius-pill);
+    width: 280px;
+    max-width: 100%;
+    padding: 12px 16px 12px 24px;
+    font-size: 16px;
+    box-shadow:
+      0 0 4px 2px #23272e3d,
+      inset 0 2px 2px #ffffff3d;
+  }
+
+  .btn--teal {
+    background-color: var(--color-cta-teal);
+    border-color: var(--color-cta-teal);
+  }
+
+  .btn--primary:hover,
+  .btn--teal:hover {
+    box-shadow:
+      0 0 12px -2px #a355f766,
+      0 0 4px 2px #23272e3d,
+      inset 0 2px 2px #ffffff3d;
+  }
+
+  .btn--secondary,
+  .btn--whatsapp {
+    color: var(--color-black);
+    background-color: var(--color-casi-blanco);
+    border: 2px solid var(--color-black);
+    border-radius: var(--radius-full);
+    height: 50px;
+    padding: 0 24px;
+    font-size: var(--text-base);
+  }
+
+  .btn--whatsapp:hover,
+  .btn--secondary:hover {
+    background-color: var(--color-white);
+  }
+
+  .btn__icon {
+    display: flex;
+    flex-shrink: 0;
+  }
+
+  .btn__icon svg {
+    display: block;
+  }
+</style>
