@@ -2,40 +2,42 @@
 
 Migración de [hiwebmarketing.com](https://www.hiwebmarketing.com) de Webflow a **Astro + Sanity + GSAP + Vercel**.
 
+Ver [AGENTS.md](AGENTS.md) para el mapa completo del proyecto (obligatorio para agentes de IA).
+
 ## Stack
 
 | Capa | Tecnología |
 |------|------------|
-| Frontend | Astro (SSG) |
-| CMS | Sanity + Studio embebido en `/admin` |
-| Animaciones | GSAP (ScrollTrigger, etc.) |
+| Frontend | Astro 7 (SSG) |
+| CMS | Sanity (`fxardjr1` / `production`) — Studio en `/admin` |
+| Animaciones | GSAP |
 | Hosting | Vercel |
-| Versionado | GitHub (`hiwebapps/hiweb-website`) |
+| Repo | [hiwebapps/hiweb-website](https://github.com/hiwebapps/hiweb-website) |
 
-## Fase 0 — Setup completado
-
-### MCPs en Cursor (`.cursor/mcp.json`)
-
-- **Sanity** — `https://mcp.sanity.io` (OAuth)
-- **Vercel** — `https://mcp.vercel.com` (OAuth)
-
-**Autenticación manual requerida:** abre *Cursor Settings → Tools & MCP*, activa ambos servidores y completa el login OAuth cuando aparezca *Needs login*.
-
-### Skills instaladas
-
-- **GSAP** — `greensock/gsap-skills` (en `.cursor/skills/` o reglas del proyecto)
-- **Sanity plugin** — instalar en Cursor chat: `/add-plugin sanity`
-
-### Cuentas pendientes (Fase 1)
-
-1. Crear proyecto en [sanity.io/manage](https://sanity.io/manage)
-2. Conectar este repo en [vercel.com](https://vercel.com) (después del scaffold Astro)
-
-## Desarrollo local
-
-> Disponible a partir de la Fase 1.
+## Setup local
 
 ```bash
+cp .env.example .env   # ya tiene projectId/dataset
 npm install
 npm run dev
 ```
+
+- Sitio: http://localhost:4321  
+- Studio: http://localhost:4321/admin  
+
+## Scripts
+
+| Comando | Acción |
+|---------|--------|
+| `npm run dev` | Dev server |
+| `npm run build` | Build de producción |
+| `npm run preview` | Preview del build |
+
+## Fases
+
+- [x] Fase 0 — MCPs, skills, repo GitHub  
+- [x] Fase 1 — Scaffold Astro + Sanity + GSAP  
+- [ ] Fase 2 — Export Webflow + design tokens  
+- [ ] Fase 3 — Schemas + Studio + contenido de prueba  
+- [ ] Fase 4 — Home pixel-perfect + blog  
+- [ ] Fase 5 — Deploy Vercel + workflow editorial  

@@ -1,0 +1,33 @@
+---
+description: Convenciones de Sanity para el sitio de Hiweb (schemas, GROQ, Studio, i18n)
+globs: src/sanity/**,sanity.config.ts
+alwaysApply: false
+---
+
+# Convenciones de Sanity
+
+## Schemas (`src/sanity/schemas/`)
+
+- Un archivo por documento, con `defineType`/`defineField`, exportado desde `index.ts`.
+- Todo documento incluye campo `language` (string, hidden, `initialValue: 'es'`) para activar `@sanity/document-internationalization` después sin migrar datos.
+- Todo documento con página propia incluye grupo `seo`: `metaTitle`, `metaDescription`, `ogImage`.
+- Títulos y descripciones de campos **en español** (los usa el equipo editorial).
+- Validar campos obligatorios con `validation: (rule) => rule.required()`; slugs con `options: { source: 'title' }`.
+
+## GROQ
+
+- TODAS las queries viven en `src/sanity/queries.ts` con `defineQuery`. Nunca GROQ inline en páginas o componentes.
+- Antes de escribir queries nuevas, cargar el schema actual con el tool `get_schema` del MCP de Sanity y consultar la regla `groq` con `get_sanity_rules`.
+- Proyectar solo los campos necesarios; no traer documentos completos.
+
+## Studio embebido
+
+- Configurado en `sanity.config.ts`, montado en `/admin` vía `studioBasePath` en `astro.config.mjs`.
+- Structure del escritorio en español, agrupada por tipo de contenido (Blog, Testimonios, FAQs, Configuración).
+- `siteSettings` es documento singleton: sin opción de crear/eliminar en el structure.
+- Nuevos dominios requieren CORS: usar el tool `add_cors_origin` del MCP (localhost:4321, *.vercel.app, dominio final).
+
+## Contenido
+
+- Cambios de schema se despliegan con `deploy_schema` (MCP) para que el agente pueda consultar/escribir contenido.
+- Contenido de prueba se crea vía MCP (`create_documents`) como drafts; publicar solo con confirmación del usuario.

@@ -1,0 +1,38 @@
+---
+description: Convenciones de Astro para el sitio de Hiweb (componentes, páginas, rendering, SEO)
+globs: **/*.astro,astro.config.mjs
+alwaysApply: false
+---
+
+# Convenciones de Astro
+
+## Rendering
+
+- SSG por defecto (`output: 'static'` + adapter de Vercel). Solo `/admin` (Studio) y endpoints en `src/pages/api/` se renderizan en servidor con `export const prerender = false`.
+- Cero JavaScript de cliente por defecto. Usar `<script>` de Astro para animaciones GSAP e islas React (`client:visible`) solo para los recursos interactivos (calculadora, quiz, calendario).
+
+## Componentes y páginas
+
+- Un componente `.astro` por sección de página en `src/components/` (Hero, Services, Testimonials, Faq...). Las páginas en `src/pages/` solo componen secciones y traen datos.
+- Los datos de Sanity se consultan en el frontmatter de la página (no del componente) y se pasan como props tipadas:
+
+```astro
+---
+// src/pages/index.astro
+import { sanityClient } from 'sanity:client';
+import { homeQuery } from '../sanity/queries';
+const data = await sanityClient.fetch(homeQuery);
+---
+<Testimonials items={data.testimonials} />
+```
+
+## SEO
+
+- Toda página usa `Layout.astro` y le pasa `title`, `description`, `ogImage` y `canonical`.
+- Los slugs replican las URLs actuales de hiwebmarketing.com (`/blogs/[slug]`); nunca inventar rutas nuevas para contenido existente.
+- JSON-LD (Organization, BlogPosting, FAQPage) se genera en el Layout o la página, no en componentes.
+
+## Estilos
+
+- Design tokens en `src/styles/global.css` como custom properties extraídas del export de Webflow. Los componentes usan `<style>` scoped consumiendo tokens; no valores mágicos de color/tipografía.
+- Breakpoints de Webflow: 991px, 767px, 479px.

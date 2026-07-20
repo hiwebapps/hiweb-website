@@ -1,0 +1,47 @@
+/* Design tokens — extract exact values from reference/webflow/ in Phase 2 */
+
+:root {
+  /* Colors (placeholders until Webflow export) */
+  --color-primary: #000000;
+  --color-secondary: #ffffff;
+  --color-text: #1a1a1a;
+  --color-muted: #666666;
+
+  /* Typography */
+  --font-heading: system-ui, sans-serif;
+  --font-body: system-ui, sans-serif;
+
+  /* Spacing */
+  --space-section: 5rem;
+
+  /* Breakpoints (Webflow defaults — use in media queries) */
+  /* 991px tablet, 767px mobile landscape, 479px mobile */
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-secondary);
+  line-height: 1.5;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: inherit;
+}

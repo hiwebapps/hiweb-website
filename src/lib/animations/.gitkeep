@@ -1,0 +1,6 @@
+/**
+ * Animation modules live here — one file per animation.
+ * Import GSAP from `../gsap`, never from `gsap` directly.
+ * Phase 4 will add: hero.ts, scrollReveals.ts, counters.ts, etc.
+ */
+export {};

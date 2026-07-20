@@ -1,0 +1,44 @@
+---
+description: Convenciones de GSAP para el sitio de Hiweb (registro central, cleanup, accesibilidad, performance)
+globs: src/lib/**/*.ts
+alwaysApply: false
+---
+
+# Convenciones de GSAP
+
+Skills oficiales disponibles en `.agents/skills/` (gsap-core, gsap-timeline, gsap-scrolltrigger, gsap-plugins, gsap-performance...). Consultarlas antes de escribir animaciones.
+
+## Registro central
+
+- GSAP y sus plugins se registran ÚNICAMENTE en `src/lib/gsap.ts`. Todo archivo de animación importa desde ahí:
+
+```ts
+// ❌ BAD
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// ✅ GOOD
+import { gsap, ScrollTrigger } from '../gsap';
+```
+
+- `astro.config.mjs` incluye `vite: { ssr: { noExternal: ['gsap'] } }`.
+
+## Estructura
+
+- Una animación por archivo en `src/lib/animations/` (`hero.ts`, `scrollReveals.ts`, `counters.ts`...). Cada archivo exporta una función `init*()` que recibe el scope/selector y devuelve el contexto.
+- Las animaciones se inicializan desde `<script>` en el componente/página que las usa, escuchando `astro:page-load`, y se limpian en `astro:after-swap`:
+
+```ts
+let ctx: gsap.Context;
+document.addEventListener('astro:page-load', () => {
+  ctx = gsap.context(() => initHero('.hero'));
+});
+document.addEventListener('astro:after-swap', () => ctx?.revert());
+```
+
+## Accesibilidad y performance
+
+- Toda animación se envuelve en `gsap.matchMedia()` respetando `(prefers-reduced-motion: reduce)`: en ese caso, mostrar el estado final sin animar.
+- Animar solo `transform` y `opacity`; nunca `top/left/width/height` (layout thrashing).
+- ScrollTrigger: usar `once: true` para reveals de entrada; matar triggers en el cleanup.
+- El objetivo es replicar las interacciones del sitio Webflow actual (https://www.hiwebmarketing.com) observándolas en vivo, no inventar animaciones nuevas.
