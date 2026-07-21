@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   VisualEditing,
   type HistoryAdapter,
@@ -6,6 +6,16 @@ import {
 } from '@sanity/visual-editing/react';
 import { perspectiveCookieName } from '@sanity/preview-url-secret/constants';
 import type { ClientPerspective } from '@sanity/client';
+
+/** Presentation loads the site in an iframe; top-level tabs must not show overlays. */
+function isFramed(): boolean {
+  try {
+    return window.self !== window.top;
+  } catch {
+    // Cross-origin frame access throws — still means we are embedded.
+    return true;
+  }
+}
 
 function serializePerspective(perspective: ClientPerspective): string {
   return typeof perspective === 'string' ? perspective : JSON.stringify(perspective);
@@ -47,8 +57,14 @@ export default function SanityVisualEditing() {
   type Navigate = Parameters<HistoryAdapter['subscribe']>[0];
   const navigateRef = useRef<Navigate | undefined>(undefined);
   const lastUrlRef = useRef('');
+  const [enabled, setEnabled] = useState(false);
 
   useEffect(() => {
+    setEnabled(isFramed());
+  }, []);
+
+  useEffect(() => {
+    if (!enabled) return;
     const sync = () => {
       const url = currentUrl();
       if (url !== lastUrlRef.current) {
@@ -78,7 +94,7 @@ export default function SanityVisualEditing() {
       window.history.pushState = origPush;
       window.history.replaceState = origReplace;
     };
-  }, []);
+  }, [enabled]);
 
   const history = useMemo<HistoryAdapter>(
     () => ({
@@ -99,6 +115,9 @@ export default function SanityVisualEditing() {
     }),
     [],
   );
+
+  // Draft cookie alone must not paint "Open in Studio" on the public site.
+  if (!enabled) return null;
 
   return (
     <VisualEditing

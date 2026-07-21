@@ -1,10 +1,26 @@
-import { useIsPresentationTool } from '@sanity/visual-editing/react';
+import { useEffect, useState } from 'react';
 
+/** True when the preview is embedded (Presentation iframe). */
+function isFramed(): boolean {
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+}
+
+/**
+ * Exit draft mode when browsing the site in a normal tab with a leftover
+ * preview cookie. Hidden inside Presentation (Studio iframe).
+ */
 export default function DisableDraftMode() {
-  const isPresentationTool = useIsPresentationTool();
+  const [show, setShow] = useState(false);
 
-  // null = still detecting, true = inside Presentation tool
-  if (isPresentationTool !== false) return null;
+  useEffect(() => {
+    setShow(!isFramed());
+  }, []);
+
+  if (!show) return null;
 
   return (
     <a

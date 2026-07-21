@@ -91,7 +91,9 @@ export default defineConfig({
       useCdn: false,
       apiVersion: '2026-07-20',
       studioBasePath: '/admin',
+      // studioUrl only — stega stays off until loadQuery enables it in draft mode.
       stega: {
+        enabled: false,
         studioUrl: '/admin',
       },
     }),

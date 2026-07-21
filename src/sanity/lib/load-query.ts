@@ -42,7 +42,9 @@ export async function loadQuery<QueryResponse>({
       filterResponse: false,
       perspective,
       resultSourceMap: draftMode ? 'withKeyArraySelector' : false,
-      stega: draftMode,
+      stega: draftMode
+        ? { enabled: true, studioUrl: '/admin' }
+        : false,
       ...(draftMode ? { token } : {}),
     },
   );
