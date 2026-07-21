@@ -1,0 +1,184 @@
+---
+interface FaqItem {
+  question: string;
+  answer: string;
+  category: string;
+}
+
+interface Props {
+  faqs: FaqItem[];
+}
+
+const { faqs } = Astro.props;
+
+const tabs = [
+  { id: 'general', label: 'General' },
+  { id: 'redes', label: 'Redes Sociales' },
+  { id: 'seo', label: 'SEO' },
+];
+---
+
+<section class="faq section-pad bg-cream" data-faq data-reveal>
+  <div class="padding-global">
+    <div class="container-large">
+      <h2 data-reveal-item>¿Tienes dudas? Tenemos respuestas</h2>
+
+      <div class="faq__tabs" role="tablist" data-reveal-item>
+        {
+          tabs.map((tab, i) => (
+            <button
+              type="button"
+              class:list={['faq__tab', { 'is-active': i === 0 }]}
+              role="tab"
+              aria-selected={i === 0}
+              data-faq-tab={tab.id}
+            >
+              {tab.label}
+            </button>
+          ))
+        }
+      </div>
+
+      {
+        tabs.map((tab, i) => {
+          const items = faqs.filter((f) => f.category === tab.id);
+          return (
+            <div
+              class:list={['faq__panel', { 'is-active': i === 0 }]}
+              role="tabpanel"
+              data-faq-panel={tab.id}
+              hidden={i !== 0}
+            >
+              {items.length ? (
+                items.map((item) => (
+                  <details class="faq__item">
+                    <summary>{item.question}</summary>
+                    <p>{item.answer}</p>
+                  </details>
+                ))
+              ) : (
+                <p class="faq__empty">Pronto más respuestas en esta categoría.</p>
+              )}
+            </div>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>
+
+<script>
+  function initFaq() {
+    const root = document.querySelector<HTMLElement>('[data-faq]');
+    if (!root || root.dataset.ready === 'true') return;
+    root.dataset.ready = 'true';
+
+    const tabs = root.querySelectorAll<HTMLElement>('[data-faq-tab]');
+    const panels = root.querySelectorAll<HTMLElement>('[data-faq-panel]');
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        const id = tab.dataset.faqTab;
+        tabs.forEach((t) => {
+          const active = t === tab;
+          t.classList.toggle('is-active', active);
+          t.setAttribute('aria-selected', String(active));
+        });
+        panels.forEach((panel) => {
+          const match = panel.dataset.faqPanel === id;
+          panel.classList.toggle('is-active', match);
+          panel.hidden = !match;
+        });
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initFaq);
+  initFaq();
+</script>
+
+<style>
+  .section-pad {
+    padding: 4rem 0;
+  }
+
+  .bg-cream {
+    background: var(--color-casi-blanco);
+    color: var(--color-text);
+  }
+
+  h2 {
+    margin: 0 0 1.5rem;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    text-align: center;
+  }
+
+  .faq__tabs {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .faq__tab {
+    position: relative;
+    min-height: 44px;
+    padding: 0.6rem 1.1rem;
+    border-radius: 999px;
+    border: 0;
+    background: #fff;
+    box-shadow: var(--shadow-border);
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: var(--fw-medium);
+    transition-property: background-color, color, box-shadow, scale;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out;
+  }
+
+  .faq__tab:active {
+    scale: 0.96;
+  }
+
+  .faq__tab.is-active {
+    background: var(--color-page-bg);
+    color: #fff;
+    box-shadow: none;
+  }
+
+  .faq__panel {
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  .faq__panel[hidden] {
+    display: none !important;
+  }
+
+  .faq__item {
+    border-bottom: 1px solid #e5e5e5;
+    padding: 0.85rem 0;
+  }
+
+  .faq__item summary {
+    cursor: pointer;
+    font-weight: var(--fw-medium);
+    list-style: none;
+  }
+
+  .faq__item summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__item p {
+    margin: 0.75rem 0 0.25rem;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .faq__empty {
+    text-align: center;
+    color: #777;
+  }
+</style>

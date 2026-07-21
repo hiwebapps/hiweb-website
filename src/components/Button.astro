@@ -4,6 +4,8 @@ interface Props {
   variant?: 'primary' | 'secondary' | 'whatsapp' | 'teal';
   target?: string;
   class?: string;
+  /** Disable scale-on-press when motion would be distracting */
+  static?: boolean;
 }
 
 const {
@@ -11,20 +13,22 @@ const {
   variant = 'primary',
   target,
   class: className = '',
+  static: isStatic = false,
 } = Astro.props;
 
 const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
+const withIcon = variant === 'primary' || variant === 'teal';
 ---
 
 <a
   href={href}
   target={target}
   rel={rel}
-  class:list={['btn', `btn--${variant}`, className]}
+  class:list={['btn', `btn--${variant}`, { 'btn--press': !isStatic }, className]}
 >
   <span class="btn__label"><slot /></span>
   {
-    variant === 'primary' || variant === 'teal' ? (
+    withIcon ? (
       <span class="btn__icon" aria-hidden="true">
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
           <path
@@ -48,12 +52,15 @@ const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    transition:
-      box-shadow 0.3s,
-      background-color 0.2s,
-      color 0.2s;
     cursor: pointer;
     white-space: nowrap;
+    transition-property: box-shadow, background-color, color, scale;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out;
+  }
+
+  .btn--press:active {
+    scale: 0.96;
   }
 
   .btn--primary,
@@ -65,7 +72,8 @@ const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
     border-radius: var(--radius-pill);
     width: 280px;
     max-width: 100%;
-    padding: 12px 16px 12px 24px;
+    /* Optical: icon side padding = text side - 2px */
+    padding: 12px 14px 12px 24px;
     font-size: 16px;
     box-shadow:
       0 0 4px 2px #23272e3d,
@@ -91,6 +99,7 @@ const rel = target === '_blank' ? 'noopener noreferrer' : undefined;
     background-color: var(--color-casi-blanco);
     border: 2px solid var(--color-black);
     border-radius: var(--radius-full);
+    min-height: 44px;
     height: 50px;
     padding: 0 24px;
     font-size: var(--text-base);

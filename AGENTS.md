@@ -10,7 +10,7 @@ Migración de [www.hiwebmarketing.com](https://www.hiwebmarketing.com) (agencia 
 
 **Estado:** MVP en construcción — home pixel-perfect + blog conectado a Sanity. Idioma: solo español (`es`), con schemas preparados para i18n futuro (campo `language`). El resto del sitio (servicios, portafolio, landings, recursos interactivos, inglés) es post-MVP.
 
-**Plan por fases:** ver `docs/FASE*.md`. Fases 0–3 completadas (MCPs, scaffold, design system, Sanity CMS + blog de prueba).
+**Plan por fases:** ver `docs/FASE*.md`. Fases 0–4 completadas (MCPs, scaffold, design system, Sanity CMS, home + GSAP).
 
 ## Mapa de carpetas
 

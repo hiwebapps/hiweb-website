@@ -1,0 +1,116 @@
+---
+const points = [
+  { title: 'Estrategia por intención:', text: 'Atraemos, nutrimos y cerramos.' },
+  { title: 'Infraestructura técnica:', text: 'Web, SEO y automatización de procesos.' },
+  { title: 'Visibilidad real:', text: 'Tracking continuo y optimización de conversiones.' },
+  { title: 'Soporte local:', text: 'Consultoría estratégica con base en el sureste de México.' },
+];
+---
+
+<section class="about section-pad bg-cream" data-reveal>
+  <div class="padding-global">
+    <div class="container-large about__grid">
+      <div class="about__copy">
+        <h2 data-reveal-item>El socio estratégico para escalar tu operación en México</h2>
+        <p data-reveal-item>
+          Deja de contratar servicios aislados y empieza a construir un ecosistema digital. En Hiweb
+          <strong>unificamos estrategia, pauta y tecnología para convertir tu inversión en un motor de leads constante.</strong>
+        </p>
+        <ul class="about__list">
+          {
+            points.map((item) => (
+              <li data-reveal-item>
+                <span class="about__check" aria-hidden="true">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <polyline
+                      points="5 12 10 17 19 8"
+                      stroke="#3b82f6"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span>
+                  <strong>{item.title}</strong> {item.text}
+                </span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="about__media" data-reveal-item>
+        <img
+          src="/images/hiweb-20team.avif"
+          srcset="/images/hiweb-20team-p-800.avif 800w, /images/hiweb-20team-p-1600.avif 1600w, /images/hiweb-20team.avif 2000w"
+          sizes="(max-width: 991px) 100vw, 50vw"
+          alt="Equipo Hiweb"
+          width="800"
+          height="600"
+          loading="lazy"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-pad {
+    padding: 4rem 0;
+  }
+
+  .bg-cream {
+    background: var(--color-casi-blanco);
+    color: var(--color-text);
+  }
+
+  .about__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .about__copy h2 {
+    margin: 0 0 1rem;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+  }
+
+  .about__copy p {
+    margin: 0 0 1.5rem;
+    line-height: 1.7;
+    color: #444;
+  }
+
+  .about__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+  }
+
+  .about__list li {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+
+  .about__check {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .about__media img {
+    width: 100%;
+    border-radius: var(--radius-lg);
+    object-fit: cover;
+    outline: 1px solid rgba(0, 0, 0, 0.1);
+    outline-offset: -1px;
+  }
+
+  @media (max-width: 991px) {
+    .about__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

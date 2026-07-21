@@ -1,221 +1,401 @@
 ---
 import Button from './Button.astro';
+import MegaMenuIcon from './MegaMenuIcon.astro';
 
 const pathname = Astro.url.pathname;
 
-const services = [
+/** Placeholder mega-menu — swap copy/icons when final Servicios IA is ready */
+const megaMenu = [
   {
-    heading: 'Crece tu negocio Y RESALTA TU MARCA',
+    heading: 'Documentation',
     links: [
       {
-        href: '/servicios/agencia-redes-sociales',
-        title: 'Redes Sociales',
-        description: 'Crecimiento estratégico en redes sociales.',
+        href: '#',
+        title: 'Product Docs',
+        description: 'Get started with guides, setup, and configuration',
+        icon: 'book',
       },
       {
-        href: '/servicios/agencia-posicionamiento-seo',
-        title: 'Posicionamiento SEO',
-        description: 'Posiciona tu marca en Google y en chats de IA.',
+        href: '#',
+        title: 'API Reference',
+        description: 'Explore endpoints, auth, and developer tools',
+        icon: 'code',
       },
       {
-        href: '/servicios/promocion-google-ads',
-        title: 'Publicidad en Google',
-        description: 'Campañas de búsqueda, Performance Max y remarketing.',
+        href: '#',
+        title: 'SDKs & Libraries',
+        description: 'Install packages to integrate quickly',
+        icon: 'package',
       },
       {
-        href: '/servicios/meta-ads-publicidad-redes-sociales',
-        title: 'Publicidad en Redes',
-        description: 'Prospecting, lookalikes y retargeting en Meta.',
-      },
-      {
-        href: '/servicios/branding',
-        title: 'Identidad de Marca & Branding',
-        description: 'Marcas claras, sólidas y memorables.',
+        href: '#',
+        title: 'Changelog',
+        description: 'Track new features and improvements',
+        icon: 'sparkles',
       },
     ],
   },
   {
-    heading: 'Automatiza, optimiza y convierte',
+    heading: 'Support',
     links: [
       {
-        href: '/servicios/crm-automatizacion-empresas',
-        title: 'CRM & Automatización',
-        description: 'Leads → nurturing → ventas con procesos claros.',
+        href: '#',
+        title: 'Help Center',
+        description: 'Find answers to common questions and issues',
+        icon: 'lifebuoy',
       },
       {
-        href: '/servicios/community-manager',
-        title: 'Community Manager',
-        description: 'Gestión estratégica de comunidad.',
+        href: '#',
+        title: 'Contact Support',
+        description: 'Reach our support team via chat or email',
+        icon: 'mail',
       },
       {
-        href: '/servicios/ia-marketing',
-        title: 'IA Marketing',
-        description: 'Chatbots, flujos y análisis predictivo.',
+        href: '#',
+        title: 'Status Page',
+        description: 'Check current uptime and incident history',
+        icon: 'activity',
       },
     ],
   },
   {
-    heading: 'Sitios web que venden',
+    heading: 'Learning',
     links: [
       {
-        href: '/servicios/diseno-desarrollo-web-mexico',
-        title: 'Diseño y Desarrollo Web',
-        description: 'Cada línea de código está orientada a tus objetivos de negocio.',
+        href: '#',
+        title: 'Academy',
+        description: 'Take courses and level up your skills',
+        icon: 'graduation',
+      },
+      {
+        href: '#',
+        title: 'Tutorials',
+        description: 'Watch short videos to learn by doing',
+        icon: 'play',
+      },
+      {
+        href: '#',
+        title: 'Webinars',
+        description: 'Join upcoming sessions or watch replays',
+        icon: 'video',
+      },
+      {
+        href: '#',
+        title: 'Certifications',
+        description: 'Get officially certified in our product',
+        icon: 'badge',
       },
     ],
   },
-];
+  {
+    heading: 'Community',
+    links: [
+      {
+        href: '#',
+        title: 'Community Forum',
+        description: 'Ask questions, share tips, and help others',
+        icon: 'users',
+      },
+      {
+        href: '#',
+        title: 'Blog',
+        description: 'Read product updates, stories, and insights',
+        icon: 'newspaper',
+      },
+    ],
+  },
+] as const;
+
+const exploreLinks = [
+  { href: '/portafolio', title: 'Casos de Éxito', icon: 'portfolio' },
+  { href: '/blogs', title: 'Blog', icon: 'newspaper' },
+] as const;
 
 const isHome = pathname === '/' || pathname === '';
 ---
 
 <header class="nav" data-nav>
-  <div class="nav__glass" aria-hidden="true"></div>
-  <div class="nav__tint" aria-hidden="true"></div>
-
-  <div class="nav__bar">
-    <a href="/" class:list={['nav__brand', { 'is-current': isHome }]} aria-label="Hiweb inicio">
-      <img
-        src="/images/isotipo-20hiweb.png"
-        width="27"
-        height="27"
-        alt=""
-        class="nav__logo"
-      />
-      <span class="nav__brand-text">Hiweb</span>
-    </a>
-
-    <button
-      type="button"
-      class="nav__burger"
-      data-nav-toggle
-      aria-expanded="false"
-      aria-controls="nav-menu"
-      aria-label="Abrir menú"
+  {/* iOS / Webflow liquid-glass stack: distortion filter + blur + tint */}
+  <svg class="nav__filter" aria-hidden="true" focusable="false">
+    <filter
+      id="nav-glass-distortion"
+      x="0%"
+      y="0%"
+      width="100%"
+      height="100%"
+      filterUnits="objectBoundingBox"
     >
-      <span class="nav__burger-line"></span>
-      <span class="nav__burger-line"></span>
-      <span class="nav__burger-line"></span>
-    </button>
+      <feTurbulence
+        type="fractalNoise"
+        baseFrequency="0.012 0.011"
+        numOctaves="1"
+        seed="5"
+        result="turbulence"
+      ></feTurbulence>
+      <feComponentTransfer in="turbulence" result="mapped">
+        <feFuncR type="gamma" amplitude="1" exponent="10" offset="0.5"></feFuncR>
+        <feFuncG type="gamma" amplitude="0" exponent="1" offset="0"></feFuncG>
+        <feFuncB type="gamma" amplitude="0" exponent="1" offset="0.5"></feFuncB>
+      </feComponentTransfer>
+      <feGaussianBlur in="turbulence" stdDeviation="3" result="softMap"></feGaussianBlur>
+      <feSpecularLighting
+        in="softMap"
+        surfaceScale="5"
+        specularConstant="1"
+        specularExponent="100"
+        lighting-color="white"
+        result="specLight"
+      >
+        <fePointLight x="-200" y="-200" z="300"></fePointLight>
+      </feSpecularLighting>
+      <feComposite
+        in="specLight"
+        operator="arithmetic"
+        k1="0"
+        k2="1"
+        k3="1"
+        k4="0"
+        result="litImage"
+      ></feComposite>
+      <feDisplacementMap
+        in="SourceGraphic"
+        in2="softMap"
+        scale="80"
+        xChannelSelector="R"
+        yChannelSelector="G"
+      ></feDisplacementMap>
+    </filter>
+  </svg>
 
-    <nav class="nav__menu" id="nav-menu" data-nav-menu>
-      <ul class="nav__links">
-        <li class="nav__item nav__item--dropdown" data-dropdown>
-          <button type="button" class="nav__link nav__link--toggle" data-dropdown-toggle aria-expanded="false">
-            Servicios
-            <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-              <path
-                d="M10.293,3.293,6,7.586,1.707,3.293A1,1,0,0,0,.293,4.707l5,5a1,1,0,0,0,1.414,0l5-5a1,1,0,1,0-1.414-1.414Z"
-                fill="currentColor"></path>
-            </svg>
-          </button>
-          <div class="nav__dropdown" data-dropdown-panel hidden>
-            {
-              services.map((section) => (
-                <div class="nav__dropdown-section">
-                  <p class="nav__dropdown-heading">{section.heading}</p>
-                  <ul class="nav__dropdown-list">
-                    {section.links.map((link) => (
-                      <li>
-                        <a href={link.href} class="nav__dropdown-link">
-                          <span class="nav__dropdown-title">{link.title}</span>
-                          <span class="nav__dropdown-desc">{link.description}</span>
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              ))
-            }
-          </div>
-        </li>
-        <li class="nav__item">
-          <a href="/portafolio" class="nav__link">Casos de Éxito</a>
-        </li>
-        <li class="nav__item">
-          <a href="/blogs" class="nav__link">Blog</a>
-        </li>
-      </ul>
+  <div class="nav__shell">
+    <div class="nav__glass" aria-hidden="true"></div>
+    <div class="nav__tint" aria-hidden="true"></div>
+    <div class="nav__highlight" aria-hidden="true"></div>
 
-      <div class="nav__ctas">
-        <Button href="https://wa.link/001xi3" variant="whatsapp" target="_blank">WhatsApp</Button>
-        <Button href="/contacto" variant="primary">Agenda tu Auditoría</Button>
-      </div>
-    </nav>
+    <div class="nav__bar">
+      <a href="/" class:list={['nav__brand', { 'is-current': isHome }]} aria-label="Hiweb inicio">
+        <img src="/images/isotipo-20hiweb.png" width="27" height="27" alt="" class="nav__logo" />
+        <span class="nav__brand-text">Hiweb</span>
+      </a>
+
+      <button
+        type="button"
+        class="nav__burger"
+        data-nav-toggle
+        aria-expanded="false"
+        aria-controls="nav-sheet"
+        aria-label="Abrir menú"
+      >
+        <span class="nav__burger-line"></span>
+        <span class="nav__burger-line"></span>
+        <span class="nav__burger-line"></span>
+      </button>
+
+      <nav class="nav__menu" id="nav-menu" data-nav-menu aria-label="Principal">
+        <ul class="nav__links">
+          <li class="nav__item nav__item--dropdown" data-dropdown>
+            <button type="button" class="nav__link nav__link--toggle" data-dropdown-toggle aria-expanded="false">
+              Servicios
+              <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+                <path
+                  d="M10.293,3.293,6,7.586,1.707,3.293A1,1,0,0,0,.293,4.707l5,5a1,1,0,0,0,1.414,0l5-5a1,1,0,1,0-1.414-1.414Z"
+                  fill="currentColor"></path>
+              </svg>
+            </button>
+
+            <div class="nav__dropdown" data-dropdown-panel hidden>
+              {
+                megaMenu.map((section) => (
+                  <div class="nav__dropdown-col">
+                    <p class="nav__dropdown-heading">{section.heading}</p>
+                    <ul class="nav__dropdown-list">
+                      {section.links.map((link) => (
+                        <li>
+                          <a href={link.href} class="nav__dropdown-link">
+                            <span class="nav__dropdown-icon" aria-hidden="true">
+                              <MegaMenuIcon name={link.icon} />
+                            </span>
+                            <span class="nav__dropdown-copy">
+                              <span class="nav__dropdown-title">{link.title}</span>
+                              <span class="nav__dropdown-desc">{link.description}</span>
+                            </span>
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ))
+              }
+            </div>
+          </li>
+          <li class="nav__item">
+            <a href="/portafolio" class="nav__link">Casos de Éxito</a>
+          </li>
+          <li class="nav__item">
+            <a href="/blogs" class="nav__link">Blog</a>
+          </li>
+        </ul>
+
+        <div class="nav__ctas">
+          <Button href="https://wa.link/001xi3" variant="whatsapp" target="_blank">WhatsApp</Button>
+          <Button href="/contacto" variant="primary">Agenda tu Auditoría</Button>
+        </div>
+      </nav>
+    </div>
   </div>
 </header>
 
+{/* Full-screen mobile sheet — header mirrors closed navbar geometry */}
+<div class="nav-sheet" id="nav-sheet" data-nav-sheet hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Menú">
+  <div class="nav-sheet__top">
+    <div class="nav-sheet__header" data-sheet-header>
+      <a href="/" class="nav-sheet__brand" aria-label="Hiweb inicio">
+        <img src="/images/isotipo-20hiweb.png" width="27" height="27" alt="" class="nav-sheet__logo" />
+        <span class="nav-sheet__brand-text">Hiweb</span>
+      </a>
+      <div class="nav-sheet__header-actions">
+        <a href="/contacto" class="nav-sheet__pill">Agenda</a>
+        <button type="button" class="nav-sheet__close" data-nav-sheet-close aria-label="Cerrar menú">
+          <MegaMenuIcon name="close" />
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-sheet__scroll">
+    {
+      megaMenu.map((section) => (
+        <section class="nav-sheet__section" data-sheet-section>
+          <p class="nav-sheet__heading">{section.heading}</p>
+          <ul class="nav-sheet__list">
+            {section.links.map((link) => (
+              <li data-sheet-item>
+                <a href={link.href} class="nav-sheet__link">
+                  <span class="nav-sheet__icon" aria-hidden="true">
+                    <MegaMenuIcon name={link.icon} />
+                  </span>
+                  <span class="nav-sheet__label">{link.title}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+
+    <section class="nav-sheet__section" data-sheet-section>
+      <p class="nav-sheet__heading">Explorar</p>
+      <ul class="nav-sheet__list">
+        {
+          exploreLinks.map((link) => (
+            <li data-sheet-item>
+              <a href={link.href} class="nav-sheet__link">
+                <span class="nav-sheet__icon" aria-hidden="true">
+                  <MegaMenuIcon name={link.icon} />
+                </span>
+                <span class="nav-sheet__label">{link.title}</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+  </div>
+
+  <div class="nav-sheet__footer" data-sheet-footer>
+    <a href="https://wa.link/001xi3" class="nav-sheet__cta nav-sheet__cta--ghost" target="_blank" rel="noopener noreferrer">
+      WhatsApp
+    </a>
+    <a href="/contacto" class="nav-sheet__cta nav-sheet__cta--primary">Agenda tu Auditoría</a>
+  </div>
+</div>
+
+{!isHome && <div class="nav__offset" aria-hidden="true" />}
+
 <script>
-  function initNav() {
-    const root = document.querySelector('[data-nav]');
-    if (!root) return;
+  import { initNav } from '../lib/animations/nav';
 
-    const toggle = root.querySelector('[data-nav-toggle]');
-    const menu = root.querySelector('[data-nav-menu]');
-    const dropdown = root.querySelector('[data-dropdown]');
-    const dropdownToggle = root.querySelector('[data-dropdown-toggle]');
-    const dropdownPanel = root.querySelector('[data-dropdown-panel]');
+  let cleanup: (() => void) | undefined;
 
-    toggle?.addEventListener('click', () => {
-      const open = root.classList.toggle('is-open');
-      toggle.setAttribute('aria-expanded', String(open));
-      toggle.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
-    });
-
-    dropdownToggle?.addEventListener('click', () => {
-      const isHidden = dropdownPanel?.hasAttribute('hidden');
-      if (isHidden) {
-        dropdownPanel?.removeAttribute('hidden');
-        dropdown?.classList.add('is-open');
-        dropdownToggle.setAttribute('aria-expanded', 'true');
-      } else {
-        dropdownPanel?.setAttribute('hidden', '');
-        dropdown?.classList.remove('is-open');
-        dropdownToggle.setAttribute('aria-expanded', 'false');
-      }
-    });
-
-    document.addEventListener('click', (event) => {
-      if (!dropdown?.contains(event.target as Node)) {
-        dropdownPanel?.setAttribute('hidden', '');
-        dropdown?.classList.remove('is-open');
-        dropdownToggle?.setAttribute('aria-expanded', 'false');
-      }
-    });
+  function boot() {
+    cleanup?.();
+    cleanup = initNav();
   }
 
-  document.addEventListener('astro:page-load', initNav);
-  initNav();
+  document.addEventListener('astro:page-load', boot);
+  document.addEventListener('astro:after-swap', () => cleanup?.());
+  boot();
 </script>
 
 <style>
   .nav {
-    position: sticky;
+    position: fixed;
     top: var(--nav-top);
+    left: 0;
+    right: 0;
     z-index: var(--nav-z);
-    margin: 0 4%;
-    border-radius: var(--radius-full);
+    width: calc(100% - 8%);
+    max-width: var(--nav-max);
+    margin-inline: auto;
     overflow: visible;
-    box-shadow:
-      0 0 20px #0000001a,
-      0 6px 6px #0003;
+  }
+
+  .nav__filter {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  /* Pill shell: glass layers clip here; dropdown escapes via overflow:visible on .nav */
+  .nav__shell {
+    position: relative;
+    border-radius: var(--radius-full);
+    border: 2px solid var(--nav-glass-border);
+    box-shadow: var(--nav-glass-shadow);
+    overflow: visible;
+  }
+
+  .nav__offset {
+    height: calc(var(--nav-top) + var(--nav-min-height));
+    flex-shrink: 0;
   }
 
   .nav__glass,
-  .nav__tint {
+  .nav__tint,
+  .nav__highlight {
     position: absolute;
     inset: 0;
-    border-radius: 8rem;
+    border-radius: inherit;
     pointer-events: none;
+    overflow: hidden;
   }
 
+  /* Liquid glass: SVG distortion + light blur (Webflow / iOS) */
   .nav__glass {
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
+    z-index: 0;
+    background: transparent;
+    backdrop-filter: blur(var(--nav-glass-blur)) saturate(160%);
+    -webkit-backdrop-filter: blur(var(--nav-glass-blur)) saturate(160%);
+    filter: url(#nav-glass-distortion);
   }
 
   .nav__tint {
-    background-color: #0009;
+    z-index: 0;
+    background-color: var(--nav-glass-tint);
+  }
+
+  /* Soft top edge highlight — iOS frosted glass cue */
+  .nav__highlight {
+    z-index: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.02) 40%,
+      transparent 65%
+    );
+    opacity: 0.4;
+    mix-blend-mode: soft-light;
   }
 
   .nav__bar {
@@ -226,19 +406,21 @@ const isHome = pathname === '/' || pathname === '';
     justify-content: space-between;
     gap: 1rem;
     width: 100%;
-    max-width: var(--container-max);
     min-height: var(--nav-min-height);
     margin: 0 auto;
-    padding: 0 1rem;
-    border: 2px solid var(--color-white);
-    border-radius: var(--radius-md);
-    background-color: var(--color-black);
+    padding: 0 2rem;
+    border: 0;
+    border-radius: inherit;
+    background-color: transparent;
+    box-shadow: none;
+    outline: none;
   }
 
   .nav__brand {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-shrink: 0;
     color: var(--color-white);
     padding: 15px 0;
     font-size: 2rem;
@@ -258,15 +440,19 @@ const isHome = pathname === '/' || pathname === '';
 
   .nav__burger {
     display: none;
+    position: relative;
     flex-direction: column;
     justify-content: center;
     gap: 6px;
-    width: 48px;
-    height: 48px;
-    padding: 10px 16px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px 12px;
     border: 0;
     background: transparent;
     cursor: pointer;
+    z-index: 1;
   }
 
   .nav__burger-line {
@@ -275,7 +461,9 @@ const isHome = pathname === '/' || pathname === '';
     height: 2px;
     background: var(--color-white);
     border-radius: 2px;
-    transition: transform 0.2s, opacity 0.2s;
+    transition-property: transform, opacity;
+    transition-duration: 200ms;
+    transition-timing-function: ease-out;
   }
 
   .nav.is-open .nav__burger-line:nth-child(1) {
@@ -294,20 +482,22 @@ const isHome = pathname === '/' || pathname === '';
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 1.5rem;
+    gap: clamp(1rem, 2vw, 2.5rem);
     flex: 1;
+    min-width: 0;
   }
 
   .nav__links {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.25rem;
   }
 
   .nav__link {
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
+    min-height: 44px;
     padding: 16px 12px;
     color: var(--color-white);
     font-weight: var(--fw-medium);
@@ -316,6 +506,9 @@ const isHome = pathname === '/' || pathname === '';
     border: 0;
     cursor: pointer;
     font-family: inherit;
+    transition-property: color, opacity;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out;
   }
 
   .nav__link:hover {
@@ -323,67 +516,120 @@ const isHome = pathname === '/' || pathname === '';
   }
 
   .nav__item--dropdown {
-    position: relative;
+    position: static;
   }
 
   .nav__dropdown {
     position: absolute;
-    top: calc(100% + 0.75rem);
-    left: 0;
+    top: calc(100% + 0.65rem);
+    left: 50%;
     display: grid;
-    grid-template-columns: repeat(3, minmax(14rem, 1fr));
-    gap: 1.5rem;
-    min-width: 42rem;
-    padding: 1.5rem;
-    border-radius: var(--radius-md);
-    background: var(--color-black);
-    border: 1px solid #ffffff26;
-    box-shadow: 0 16px 40px #00000066;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    width: min(100%, 72rem);
+    max-width: calc(100vw - 2rem);
+    padding: 1.25rem 0.5rem;
+    border-radius: 1rem;
+    background: rgba(10, 10, 12, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    will-change: transform, opacity;
+  }
+
+  .nav__dropdown[hidden] {
+    display: none !important;
+  }
+
+  .nav__dropdown-col {
+    padding: 0.75rem 1.25rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .nav__dropdown-col:last-child {
+    border-right: 0;
   }
 
   .nav__dropdown-heading {
-    margin: 0 0 0.75rem;
+    margin: 0 0 1rem;
+    padding: 0 0.5rem;
     font-size: 0.7rem;
-    font-weight: var(--fw-bold);
-    letter-spacing: 0.04em;
+    font-weight: var(--fw-semibold);
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: var(--color-gris);
+    color: #888888;
   }
 
   .nav__dropdown-list {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.15rem;
   }
 
   .nav__dropdown-link {
-    display: flex;
-    flex-direction: column;
-    gap: 0.15rem;
-    padding: 0.5rem;
-    border-radius: var(--radius-sm);
+    display: grid;
+    grid-template-columns: 1.25rem 1fr;
+    gap: 0.75rem;
+    align-items: start;
+    min-height: 44px;
+    padding: 0.65rem 0.5rem;
+    border-radius: 0.5rem;
     color: var(--color-white);
+    transition-property: background-color;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out;
   }
 
   .nav__dropdown-link:hover {
-    background: #ffffff14;
+    background: rgba(255, 255, 255, 0.06);
+  }
+
+  .nav__dropdown-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.1rem;
+    color: #c8c8c8;
+  }
+
+  .nav__dropdown-icon :global(svg) {
+    width: 1.15rem;
+    height: 1.15rem;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .nav__dropdown-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
   }
 
   .nav__dropdown-title {
     font-weight: var(--fw-semibold);
     font-size: 0.95rem;
+    line-height: 1.25;
+    color: #ffffff;
   }
 
   .nav__dropdown-desc {
     font-size: 0.8rem;
-    color: var(--color-off-white);
+    font-weight: var(--fw-regular);
     line-height: 1.4;
+    color: #888888;
   }
 
   .nav__ctas {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-shrink: 0;
   }
 
   .nav__ctas :global(.btn--primary) {
@@ -391,49 +637,292 @@ const isHome = pathname === '/' || pathname === '';
     min-width: 220px;
   }
 
+  /* Laptop (992–1199): tighten spacing so the glass pill doesn’t feel cramped */
+  @media (min-width: 992px) and (max-width: 1199px) {
+    .nav__bar {
+      padding: 0 1.25rem;
+      gap: 0.75rem;
+    }
+
+    .nav__brand-text {
+      font-size: 1.5rem;
+    }
+
+    .nav__link {
+      padding: 14px 8px;
+      font-size: 0.95rem;
+    }
+
+    .nav__ctas :global(.btn--primary) {
+      min-width: 0;
+      padding-left: 1rem;
+      padding-right: 0.75rem;
+    }
+
+    .nav__ctas :global(.btn--whatsapp) {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+
+  /* Desktop / 1440–1920: generous but capped at --nav-max (1300px) */
+  @media (min-width: 1200px) {
+    .nav__bar {
+      padding: 0 2rem;
+    }
+
+    .nav__menu {
+      gap: 2rem;
+    }
+
+    .nav__links {
+      gap: 0.35rem;
+    }
+  }
+
+  /* —— Full-screen mobile sheet —— */
+  .nav-sheet {
+    position: fixed;
+    inset: 0;
+    z-index: calc(var(--nav-z) + 10);
+    display: flex;
+    flex-direction: column;
+    background: #050506;
+    color: var(--color-white);
+    padding: env(safe-area-inset-top, 0) env(safe-area-inset-right, 0) env(safe-area-inset-bottom, 0)
+      env(safe-area-inset-left, 0);
+  }
+
+  .nav-sheet[hidden] {
+    display: none !important;
+  }
+
+  /* Same outer frame as .nav on mobile so header lands on the closed pill */
+  .nav-sheet__top {
+    flex-shrink: 0;
+    width: calc(100% - 1.5rem);
+    max-width: var(--nav-max);
+    margin: var(--nav-top) auto 0;
+  }
+
+  .nav-sheet__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    min-height: var(--nav-min-height);
+    padding: 0 1rem;
+    border-radius: var(--radius-full);
+    border: 2px solid var(--nav-glass-border);
+    background: rgba(0, 0, 0, 0.96);
+    box-shadow: var(--nav-glass-shadow);
+  }
+
+  .nav-sheet__brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    color: var(--color-white);
+    padding: 15px 0;
+  }
+
+  .nav-sheet__logo {
+    width: 26.5px;
+    height: auto;
+  }
+
+  .nav-sheet__brand-text {
+    font-family: var(--font-heading);
+    font-size: 1.45rem;
+    font-weight: var(--fw-medium);
+    line-height: 1;
+  }
+
+  .nav-sheet__header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+  }
+
+  .nav-sheet__pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    padding: 0.4rem 0.9rem;
+    border-radius: 999px;
+    background: #e8e8ea;
+    color: #111;
+    font-size: 0.85rem;
+    font-weight: var(--fw-semibold);
+    line-height: 1;
+  }
+
+  .nav-sheet__close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: #c8c8c8;
+    cursor: pointer;
+  }
+
+  .nav-sheet__close :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+  }
+
+  .nav-sheet__scroll {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 1.25rem 1.25rem 1.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav-sheet__section {
+    margin-bottom: 1.75rem;
+  }
+
+  .nav-sheet__heading {
+    margin: 0 0 0.65rem;
+    font-size: 0.8rem;
+    font-weight: var(--fw-medium);
+    color: #8a8a8a;
+    letter-spacing: 0.01em;
+  }
+
+  .nav-sheet__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .nav-sheet__link {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    min-height: 48px;
+    padding: 0.55rem 0.15rem;
+    color: #fff;
+    border-radius: 0.5rem;
+  }
+
+  .nav-sheet__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.35rem;
+    height: 1.35rem;
+    flex-shrink: 0;
+    color: #d4d4d4;
+  }
+
+  .nav-sheet__icon :global(svg) {
+    width: 1.25rem;
+    height: 1.25rem;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.75;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .nav-sheet__label {
+    font-size: 1.05rem;
+    font-weight: var(--fw-semibold);
+    line-height: 1.25;
+  }
+
+  .nav-sheet__footer {
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0));
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    background: #050506;
+  }
+
+  .nav-sheet__cta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 52px;
+    padding: 0.85rem 1.25rem;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: var(--fw-semibold);
+    text-align: center;
+  }
+
+  .nav-sheet__cta--ghost {
+    color: #fff;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+  }
+
+  .nav-sheet__cta--primary {
+    color: #fff;
+    background: var(--color-cta);
+    border: 2px solid var(--color-cta);
+    box-shadow:
+      0 0 4px 2px #23272e3d,
+      inset 0 2px 2px #ffffff3d;
+  }
+
+  @media (min-width: 992px) {
+    .nav-sheet {
+      display: none !important;
+    }
+  }
+
   @media (max-width: 991px) {
+    .nav {
+      width: calc(100% - 1.5rem);
+    }
+
+    .nav__shell {
+      background: rgba(0, 0, 0, 0.94);
+    }
+
+    .nav__tint {
+      background-color: rgba(0, 0, 0, 0.94);
+    }
+
+    .nav__bar {
+      padding: 0 1rem;
+    }
+
     .nav__burger {
       display: flex;
     }
 
     .nav__menu {
       display: none;
-      position: absolute;
-      top: calc(100% + 0.5rem);
-      left: 0;
-      right: 0;
-      flex-direction: column;
-      align-items: stretch;
-      padding: 1rem;
-      border-radius: var(--radius-md);
-      background: var(--color-black);
-      border: 2px solid var(--color-white);
     }
 
-    .nav.is-open .nav__menu {
-      display: flex;
+    .nav.is-open {
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .nav__links {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .nav__dropdown {
-      position: static;
-      min-width: 0;
-      grid-template-columns: 1fr;
-      margin-top: 0.5rem;
-      box-shadow: none;
-    }
-
-    .nav__ctas {
-      flex-direction: column;
-      margin-top: 0.75rem;
-    }
-
-    .nav__ctas :global(.btn) {
-      width: 100%;
+    .nav__brand-text {
+      font-size: 1.45rem;
     }
   }
 </style>

@@ -1,0 +1,293 @@
+---
+import Button from './Button.astro';
+
+export interface HeroMarqueeItem {
+  src: string;
+  alt: string;
+}
+
+interface Props {
+  /** Portfolio thumbnails for the infinite marquee. Swap with Sanity assets later. */
+  marqueeItems?: HeroMarqueeItem[];
+}
+
+const defaultMarqueeItems: HeroMarqueeItem[] = [
+  { src: '/images/enfoque-2021-20logo-20menu.png', alt: 'Enfoque 21' },
+  { src: '/images/resienciales.png', alt: 'Residenciales Mérida' },
+  { src: '/images/pass-20your.png', alt: 'Pass Your TOEFL' },
+  { src: '/images/basanlo.png', alt: 'Industrial Basanlo' },
+  { src: '/images/avant.png', alt: 'Avant Rent a Car' },
+  { src: '/images/diazar-20menu.png', alt: 'Diazar' },
+  {
+    src: '/images/f8943027258d6251d3de8e749b510626_peninsula-20project.png',
+    alt: 'Península Project',
+  },
+];
+
+const { marqueeItems = defaultMarqueeItems } = Astro.props;
+---
+
+<section class="hero" data-hero>
+  <div class="hero__bg" aria-hidden="true">
+    <div class="hero__glow hero__glow--1"></div>
+    <div class="hero__glow hero__glow--2"></div>
+    <div class="hero__glow hero__glow--3"></div>
+    <div class="hero__glow hero__glow--4"></div>
+    <div class="hero__glow hero__glow--5"></div>
+  </div>
+  <div class="hero__vignette" aria-hidden="true"></div>
+
+  <div class="hero__main">
+    <div class="padding-global">
+      <div class="hero__content">
+        <div class="hero__eyebrow" data-hero-item>
+          <span>Agencia de Marketing Digital</span>
+        </div>
+        <h1 class="hero__title" data-hero-item>
+          Agencia de Marketing Digital en México: SEO, Ads, Redes Sociales, Diseño Web y Más
+        </h1>
+        <p class="hero__lede" data-hero-item>
+          Hiweb es una <strong>agencia de marketing digital en México</strong> que ayuda a empresas a generar leads y
+          ventas con <strong>SEO, Ads, redes sociales y desarrollo web</strong>. Diseñamos estrategia, ejecutamos y
+          medimos ROI con reporting claro.
+        </p>
+        <div class="hero__cta" data-hero-item>
+          <Button href="/contacto" variant="primary">Agenda tu Auditoría</Button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {
+    marqueeItems.length > 0 && (
+      <div class="hero__marquee" aria-label="Proyectos Hiweb" data-marquee>
+        <div class="hero__marquee-track" data-marquee-track>
+          <div class="hero__marquee-group" data-marquee-group>
+            {marqueeItems.map((item) => (
+              <div class="hero__marquee-item">
+                <img
+                  src={item.src}
+                  alt={item.alt}
+                  width="320"
+                  height="200"
+                  loading="eager"
+                  decoding="async"
+                />
+              </div>
+            ))}
+          </div>
+          {/* Decorative clone for seamless loop — hidden from AT / SEO signal */}
+          <div class="hero__marquee-group" data-marquee-group aria-hidden="true">
+            {marqueeItems.map((item) => (
+              <div class="hero__marquee-item">
+                <img
+                  src={item.src}
+                  alt=""
+                  width="320"
+                  height="200"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: hidden;
+    color: var(--color-white);
+    background: #0a0a0c;
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+    filter: blur(120px);
+    pointer-events: none;
+  }
+
+  .hero__glow {
+    position: absolute;
+    border-radius: 50%;
+  }
+
+  /* Soft dark-friendly blobs matching Webflow circle colors — animated by GSAP as .hero__glow */
+  .hero__glow--1 {
+    width: 55vw;
+    height: 55vw;
+    background: #ffd000;
+    top: -44%;
+    left: -22%;
+    opacity: 0.55;
+  }
+
+  .hero__glow--2 {
+    width: 45vw;
+    height: 45vw;
+    background: #31b7ff;
+    top: -20%;
+    right: -18%;
+    opacity: 0.5;
+  }
+
+  .hero__glow--3 {
+    width: 50vw;
+    height: 50vw;
+    background: #9361eb;
+    bottom: -33%;
+    left: -21%;
+    opacity: 0.55;
+  }
+
+  .hero__glow--4 {
+    width: 35vw;
+    height: 35vw;
+    background: #ff9118;
+    bottom: 10%;
+    right: 15%;
+    opacity: 0.35;
+  }
+
+  .hero__glow--5 {
+    width: 30vw;
+    height: 30vw;
+    background: #9318fe;
+    top: 35%;
+    left: 35%;
+    opacity: 0.3;
+  }
+
+  .hero__vignette {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 40%, transparent 0%, rgba(10, 10, 12, 0.35) 55%, rgba(10, 10, 12, 0.75) 100%),
+      linear-gradient(180deg, rgba(10, 10, 12, 0.15) 0%, rgba(10, 10, 12, 0.55) 100%);
+  }
+
+  .hero__main {
+    position: relative;
+    z-index: 1;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 0 2rem;
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 52rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+  }
+
+  .hero__eyebrow {
+    display: inline-flex;
+    padding: 4px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 999px;
+    font-size: 0.875rem;
+    color: var(--color-off-white);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .hero__title {
+    margin: 0;
+    font-size: clamp(2rem, 4.5vw, 3.75rem);
+    font-weight: var(--fw-medium);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  .hero__lede {
+    margin: 0;
+    max-width: 40rem;
+    font-size: 1.05rem;
+    line-height: 1.75;
+    color: var(--color-off-white);
+    text-wrap: pretty;
+  }
+
+  .hero__marquee {
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+    width: 100%;
+    height: 30vh;
+    min-height: 220px;
+    max-height: 280px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    margin-top: auto;
+    mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  }
+
+  .hero__marquee-track {
+    display: flex;
+    width: max-content;
+    align-items: center;
+    will-change: transform;
+    transform: translate3d(0, 0, 0);
+  }
+
+  .hero__marquee-group {
+    display: flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 20px;
+    padding-right: 20px;
+  }
+
+  .hero__marquee-item {
+    flex: 0 0 auto;
+  }
+
+  .hero__marquee-item img {
+    display: block;
+    height: 200px;
+    max-height: 200px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 8px;
+    outline: none;
+    filter: none;
+  }
+
+  @media (max-width: 767px) {
+    .hero__main {
+      padding-top: 5rem;
+    }
+
+    .hero__marquee {
+      min-height: 160px;
+      height: 22vh;
+    }
+
+    .hero__marquee-item img {
+      height: 140px;
+      max-height: 140px;
+    }
+  }
+</style>

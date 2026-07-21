@@ -58,6 +58,7 @@
   --padding-global: 4%;
   --container-max: 80rem;
   --container-max-lg: 80rem;
+  --nav-max: 1300px;
 
   /* Radii */
   --radius-sm: 0.5rem;
@@ -70,6 +71,26 @@
   --nav-min-height: 4.5rem;
   --nav-top: 1.5rem;
   --nav-z: 2000;
+  --nav-glass-blur: 10px;
+  --nav-glass-tint: rgba(0, 0, 0, 0.92);
+  --nav-glass-border: rgba(255, 255, 255, 0.12);
+  --nav-glass-highlight: rgba(255, 255, 255, 0.08);
+  --nav-glass-shadow:
+    0 0 20px rgba(0, 0, 0, 0.22),
+    0 8px 24px rgba(0, 0, 0, 0.4),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+  /* Surface shadows (prefer over hard borders for depth) */
+  --shadow-border:
+    0 0 0 1px rgba(0, 0, 0, 0.06),
+    0 1px 2px -1px rgba(0, 0, 0, 0.06),
+    0 2px 4px 0 rgba(0, 0, 0, 0.04);
+  --shadow-border-hover:
+    0 0 0 1px rgba(0, 0, 0, 0.08),
+    0 1px 2px -1px rgba(0, 0, 0, 0.08),
+    0 2px 4px 0 rgba(0, 0, 0, 0.06);
+  --shadow-border-dark: 0 0 0 1px rgba(255, 255, 255, 0.08);
+  --shadow-border-dark-hover: 0 0 0 1px rgba(255, 255, 255, 0.13);
 
   /* Breakpoints (reference — use in media queries)
      479px mobile, 767px tablet-sm, 991px tablet, 1280px desktop+ */
@@ -84,6 +105,8 @@
 html {
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -94,13 +117,24 @@ body {
   line-height: var(--lh-body);
   color: var(--color-text);
   background-color: var(--color-page-bg);
-  -webkit-font-smoothing: antialiased;
 }
 
 img {
   max-width: 100%;
   height: auto;
   display: block;
+  outline: 1px solid rgba(0, 0, 0, 0.1);
+  outline-offset: -1px;
+}
+
+/* Content images on dark surfaces */
+.page-wrapper img[src*='isotipo'],
+.nav img,
+.footer img,
+.final-cta img,
+.testimonial-card img,
+.hero__marquee img {
+  outline: none;
 }
 
 a {
@@ -122,6 +156,18 @@ h4 {
   line-height: var(--lh-tight);
   font-weight: var(--fw-medium);
   margin: 0;
+  text-wrap: balance;
+}
+
+p,
+li,
+figcaption,
+blockquote {
+  text-wrap: pretty;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
 }
 
 .padding-global {

@@ -1,0 +1,86 @@
+---
+import Button from './Button.astro';
+---
+
+<section class="final-cta section-pad bg-cream" data-reveal>
+  <div class="padding-global">
+    <div class="container-large">
+      <div class="final-cta__card" data-reveal-item>
+        <div class="final-cta__copy">
+          <h2>Lleva tu negocio al siguiente nivel digital</h2>
+          <p>
+            Hiweb Marketing es tu agencia de marketing digital en México. Agenda una auditoría y conversemos sobre cómo
+            escalar tus canales digitales.
+          </p>
+          <div class="final-cta__actions">
+            <Button href="/contacto" variant="primary">Contáctanos</Button>
+            <Button href="https://wa.link/001xi3" variant="whatsapp" target="_blank">WhatsApp</Button>
+          </div>
+        </div>
+        <img src="/images/recurso_white.png" alt="" class="final-cta__art" width="280" height="200" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-pad {
+    padding: 2rem 0 5rem;
+  }
+
+  .bg-cream {
+    background: var(--color-casi-blanco);
+  }
+
+  .final-cta__card {
+    display: grid;
+    grid-template-columns: 1.4fr 0.8fr;
+    gap: 2rem;
+    align-items: center;
+    padding: 2.5rem;
+    border-radius: 28px;
+    background: #12141d;
+    color: #fff;
+    box-shadow: var(--shadow-border-dark);
+  }
+
+  .final-cta__copy h2 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+  }
+
+  .final-cta__copy p {
+    margin: 0 0 1.5rem;
+    color: var(--color-off-white);
+    line-height: 1.6;
+    max-width: 36rem;
+  }
+
+  .final-cta__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .final-cta__art {
+    justify-self: end;
+    max-width: 240px;
+    width: 100%;
+    opacity: 0.95;
+  }
+
+  @media (max-width: 767px) {
+    .final-cta__card {
+      grid-template-columns: 1fr;
+      text-align: center;
+    }
+
+    .final-cta__actions {
+      justify-content: center;
+    }
+
+    .final-cta__art {
+      justify-self: center;
+    }
+  }
+</style>

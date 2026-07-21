@@ -1,0 +1,307 @@
+---
+const services = [
+  {
+    title: 'SEO / AEO (Local y Nacional)',
+    blurb: 'Capturamos la demanda de quienes ya están buscando lo que ofreces.',
+    bullets: ['Auditoría + arquitectura + SEO on-page', 'Contenido estratégico + optimización continua'],
+    href: '/servicios/agencia-posicionamiento-seo',
+    cta: 'Ver SEO',
+    tone: 'orange',
+  },
+  {
+    title: 'Google Ads',
+    blurb: 'Captura la demanda activa con intención de compra inmediata.',
+    bullets: [
+      'Campañas de Búsqueda, Performance Max y Remarketing dinámico.',
+      'Optimización semanal basada en CPL (costo por lead) y ROAS.',
+    ],
+    href: '/servicios/promocion-google-ads',
+    cta: 'Ver Google Ads',
+    tone: 'default',
+  },
+  {
+    title: 'Meta Ads',
+    blurb: 'Genera demanda y confianza con segmentación avanzada.',
+    bullets: [
+      'Estrategias de prospecting, públicos lookalike y retargeting.',
+      'Mensajes y visuales diseñados para cada etapa del embudo de ventas.',
+    ],
+    href: '/servicios/meta-ads-publicidad-redes-sociales',
+    cta: 'Ver Meta Ads',
+    tone: 'purple',
+  },
+  {
+    title: 'Redes Sociales',
+    blurb: 'Contenido estratégico que genera confianza y ventas.',
+    bullets: ['Estrategia + calendario + producción', 'Creativos para campañas y orgánico'],
+    href: '/servicios/agencia-redes-sociales',
+    cta: 'Ver Redes Sociales',
+    tone: 'green',
+  },
+  {
+    title: 'Diseño y Desarrollo Web',
+    blurb: 'Sitios rápidos, claros y construidos para convertir.',
+    bullets: ['UX/UI + copy + estructura SEO-friendly', 'Performance + tracking + analítica'],
+    href: '/servicios/diseno-desarrollo-web-mexico',
+    cta: 'Ver Diseño y Desarrollo Web',
+    tone: 'blue',
+  },
+  {
+    title: 'CRM & Automatización',
+    blurb: 'Ordena tu seguimiento y mejora conversión con procesos.',
+    bullets: ['Auditoría e implementación de flujos comerciales.', 'Leads → nurturing → ventas'],
+    href: '/servicios/crm-automatizacion-empresas',
+    cta: 'Ver CRM & Automatización',
+    tone: 'red',
+  },
+  {
+    title: 'Identidad de Marca & Branding',
+    blurb: 'Construimos marcas claras, sólidas y memorables.',
+    bullets: ['Identidad visual estratégica', 'Manual de marca y aplicaciones'],
+    href: '/servicios/branding',
+    cta: 'Ver Branding',
+    tone: 'pink',
+  },
+  {
+    title: 'IA Marketing',
+    blurb: 'Automatización inteligente que acelera tus resultados.',
+    bullets: ['Chatbots y flujos con IA', 'Optimización y análisis predictivo'],
+    href: '/servicios/ia-marketing',
+    cta: 'Ver IA Marketing',
+    tone: 'blue2',
+  },
+  {
+    title: 'Community Manager',
+    blurb: 'Gestión estratégica que fortalece tu marca.',
+    bullets: ['Atención y gestión de comunidad', 'Contenido alineado a objetivos'],
+    href: '/servicios/community-manager',
+    cta: 'Ver Community Manager',
+    tone: 'yellow',
+  },
+];
+---
+
+<section class="services section-pad bg-cream" data-reveal>
+  <div class="padding-global">
+    <div class="container-large">
+      <header class="services__header" data-reveal-item>
+        <h2>Servicios de marketing digital en México</h2>
+        <p>
+          Unificamos estrategia, ejecución y medición para escalar demanda y ventas. Elige un servicio o trabaja un
+          stack completo.
+        </p>
+      </header>
+
+      <div class="services__grid">
+        {
+          services.map((service) => (
+            <a href={service.href} class="service-card" data-reveal-item>
+              <div class:list={['service-card__icon', `tone-${service.tone}`]} aria-hidden="true" />
+              <h3>{service.title}</h3>
+              <p class="service-card__blurb">{service.blurb}</p>
+              <ul>
+                {service.bullets.map((bullet) => (
+                  <li>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <polyline
+                        points="5 12 10 17 19 8"
+                        stroke="#3b82f6"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                    <span>{bullet}</span>
+                  </li>
+                ))}
+              </ul>
+              <span class="service-card__cta">{service.cta}</span>
+            </a>
+          ))
+        }
+
+        <a href="/contacto" class="service-card service-card--cta" data-reveal-item>
+          <h3>Marketing 360: Deja de contratar servicios separados.</h3>
+          <p>
+            El verdadero escalamiento sucede cuando tus redes, tu web y tu pauta trabajan bajo un mismo objetivo. En
+            <strong>Hiweb</strong>, nos convertimos en tu departamento de marketing integral para eliminar la fricción
+            operativa y potenciar tu rentabilidad. Si tu empresa está lista para dejar de contratar tareas y empezar a
+            invertir en un sistema, hablemos.
+          </p>
+          <span class="service-card__cta">Solicita un diagnóstico de tus canales digitales</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-pad {
+    padding: 4rem 0;
+  }
+
+  .bg-cream {
+    background: var(--color-casi-blanco);
+    color: var(--color-text);
+  }
+
+  .services__header {
+    max-width: 40rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .services__header h2 {
+    margin: 0 0 0.75rem;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+  }
+
+  .services__header p {
+    margin: 0;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .services__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .service-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    /* Concentric: outer 24px = inner 12px icon + 12px effective nest */
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: var(--shadow-border);
+    border: 0;
+    color: inherit;
+    transition-property: transform, box-shadow, scale;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out;
+  }
+
+  .service-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-border-hover);
+  }
+
+  .service-card:active {
+    scale: 0.96;
+  }
+
+  .service-card__icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: #eef4ff;
+  }
+
+  .tone-orange {
+    background: #fff1e6;
+  }
+  .tone-purple {
+    background: #f3eaff;
+  }
+  .tone-green {
+    background: #e7f7f3;
+  }
+  .tone-blue {
+    background: #e8f1ff;
+  }
+  .tone-red {
+    background: #ffeaea;
+  }
+  .tone-pink {
+    background: #ffe8f6;
+  }
+  .tone-blue2 {
+    background: #e6fbff;
+  }
+  .tone-yellow {
+    background: #fff8df;
+  }
+
+  .service-card h3 {
+    margin: 0;
+    font-size: 1.15rem;
+  }
+
+  .service-card__blurb {
+    margin: 0;
+    color: #555;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .service-card ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    margin: 0.25rem 0 auto;
+  }
+
+  .service-card li {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    font-size: 0.875rem;
+    color: #444;
+    line-height: 1.4;
+  }
+
+  .service-card li svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .service-card__cta {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+    padding: 0.65rem 1rem;
+    border-radius: var(--radius-pill);
+    background: var(--color-cta);
+    color: #fff;
+    font-size: 0.9rem;
+    font-weight: var(--fw-medium);
+    align-self: flex-start;
+  }
+
+  .service-card--cta {
+    grid-column: 1 / -1;
+    background: #111;
+    color: #fff;
+    box-shadow: var(--shadow-border-dark);
+  }
+
+  .service-card--cta:hover {
+    box-shadow: var(--shadow-border-dark-hover);
+  }
+
+  .service-card--cta p {
+    margin: 0;
+    color: var(--color-off-white);
+    max-width: 52rem;
+    line-height: 1.65;
+  }
+
+  .service-card--cta .service-card__cta {
+    background: var(--color-cta-teal);
+  }
+
+  @media (max-width: 991px) {
+    .services__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .services__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

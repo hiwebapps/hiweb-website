@@ -1,84 +1,48 @@
 ---
+import { sanityClient } from 'sanity:client';
 import Layout from '../layouts/Layout.astro';
-import Button from '../components/Button.astro';
-import SectionWrapper from '../components/SectionWrapper.astro';
+import Hero from '../components/Hero.astro';
+import About from '../components/About.astro';
+import Services from '../components/Services.astro';
+import Portfolio from '../components/Portfolio.astro';
+import Experience from '../components/Experience.astro';
+import Process from '../components/Process.astro';
+import Faq from '../components/Faq.astro';
+import FinalCta from '../components/FinalCta.astro';
+import { faqsQuery, testimonialsQuery } from '../sanity/queries';
+
+const [testimonials, faqs] = await Promise.all([
+  sanityClient.fetch(testimonialsQuery),
+  sanityClient.fetch(faqsQuery),
+]);
 ---
 
 <Layout
   title="Digital Marketing Agency in Mexico | Hiweb"
-  description="Agencia de marketing digital en México. SEO, Ads, redes sociales y desarrollo web con resultados medibles."
+  description="Agencia de marketing digital en México. SEO, Ads, redes sociales y desarrollo web con resultados medibles. Agenda tu auditoría."
+  ogImage="/images/hiweb-20team.avif"
 >
-  <SectionWrapper variant="default">
-    <div class="phase2-preview">
-      <p class="eyebrow">Fase 2 · Design system</p>
-      <h1>Tokens, Header, Footer y Buttons listos</h1>
-      <p class="lede">
-        Extraídos del export de Webflow en <code>reference/webflow/</code>. La home pixel-perfect llega en la Fase 4;
-        aquí validamos la cáscara del sitio.
-      </p>
-      <div class="actions">
-        <Button href="/contacto" variant="primary">Agenda tu Auditoría</Button>
-        <Button href="https://wa.link/001xi3" variant="whatsapp" target="_blank">WhatsApp</Button>
-        <Button href="/contacto" variant="teal">CTA teal</Button>
-      </div>
-    </div>
-  </SectionWrapper>
-
-  <SectionWrapper variant="white">
-    <div class="phase2-preview dark-text">
-      <h2>Sección blanca (casi-blanco #fafafa)</h2>
-      <p>Misma tipografía Plus Jakarta Sans y contenedor max-width 80rem que el sitio actual.</p>
-    </div>
-  </SectionWrapper>
+  <Hero />
+  <About />
+  <Services />
+  <Portfolio />
+  <Experience testimonials={testimonials ?? []} />
+  <Process />
+  <Faq faqs={faqs ?? []} />
+  <FinalCta />
 </Layout>
 
-<style>
-  .phase2-preview {
-    max-width: 40rem;
-    padding: 4rem 0;
+<script>
+  import { initHomeAnimations } from '../lib/animations/home';
+
+  let ctx: ReturnType<typeof initHomeAnimations> | undefined;
+
+  function boot() {
+    ctx?.revert();
+    ctx = initHomeAnimations();
   }
 
-  .eyebrow {
-    margin: 0 0 0.75rem;
-    font-size: var(--text-sm);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--color-gris);
-  }
-
-  h1,
-  h2 {
-    margin: 0 0 1rem;
-  }
-
-  h1 {
-    font-size: clamp(2rem, 5vw, var(--text-h1));
-    color: var(--color-white);
-  }
-
-  .lede {
-    margin: 0 0 2rem;
-    color: var(--color-off-white);
-  }
-
-  .actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .dark-text h2 {
-    color: var(--color-text);
-    font-size: clamp(1.5rem, 3vw, var(--text-h2));
-  }
-
-  .dark-text p {
-    color: var(--color-text-muted);
-    margin: 0;
-  }
-
-  code {
-    font-size: 0.9em;
-    color: var(--color-primary);
-  }
-</style>
+  document.addEventListener('astro:page-load', boot);
+  document.addEventListener('astro:after-swap', () => ctx?.revert());
+  boot();
+</script>

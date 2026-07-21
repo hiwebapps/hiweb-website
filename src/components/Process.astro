@@ -1,0 +1,164 @@
+---
+import Button from './Button.astro';
+
+const steps = [
+  {
+    n: '01',
+    title: 'Auditoría y Diagnóstico 360',
+    body: 'No empezamos a ciegas; realizamos un análisis técnico de tu Web, SEO y campañas actuales para detectar fugas de presupuesto y oportunidades de captación inmediata.',
+    cardTitle: 'Seguimiento',
+    cardBody: 'Auditoría de web, SEO, anuncios, redes y tracking para detectar oportunidades y quick wins.',
+    image: '/images/670d1d2863b51e9383d6a5f9_hiw-20image-2001.webp',
+  },
+  {
+    n: '02',
+    title: 'Estrategia 360',
+    body: 'Diseñamos el ecosistema donde tus canales, el contenido estratégico y la pauta digital se alinean bajo un solo objetivo: generar leads calificados que tu equipo de ventas pueda cerrar.',
+    cardTitle: 'Una sola agencia, diferentes especialistas, una misma meta',
+    cardBody: 'Definimos el plan por fases con KPIs, prioridades y roadmap mensual alineado a negocio.',
+    image: '/images/blog-20thumbnail-203.avif',
+  },
+  {
+    n: '03',
+    title: 'Implementación',
+    body: 'Ejecutamos: creamos o rediseñamos tu sitio web, hacemos landing pages, optimizamos SEO, generamos campañas, contenidos e implementamos CRM con QA y documentación.',
+    cardTitle: 'Seguimiento',
+    cardBody: 'Una vez iniciada la implementación, tendremos seguimientos mensuales constantes para revisar avances, resultados y ROI.',
+    image: '/images/dsc_0012.webp',
+  },
+  {
+    n: '04',
+    title: 'Optimización Basada en ROI',
+    body: 'Establecemos un ritmo de optimización continua basado en datos reales. Nos reunimos mensualmente para revisar el ROI, ajustar conversiones y asegurar que tu inversión trabaje para ti.',
+    cardTitle: 'Reportes mensuales',
+    cardBody: 'Generamos reportes mensuales por servicio contratado y optimizamos de acuerdo a los datos recabados.',
+    image: '/images/blog-20thumbnail-205.avif',
+  },
+];
+---
+
+<section class="process section-pad bg-alt" data-reveal>
+  <div class="padding-global">
+    <div class="container-large">
+      <h2 class="process__title" data-reveal-item>El Proceso: De la Estrategia a la Rentabilidad</h2>
+
+      <div class="process__grid">
+        {
+          steps.map((step) => (
+            <article class="process-step" data-reveal-item>
+              <div class="process-step__num">{step.n}</div>
+              <h3>{step.title}</h3>
+              <p>{step.body}</p>
+              <div class="process-step__card">
+                <img src={step.image} alt="" loading="lazy" width="320" height="180" />
+                <div>
+                  <p class="process-step__card-title">{step.cardTitle}</p>
+                  <p>{step.cardBody}</p>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="process__cta" data-reveal-item>
+        <Button href="/contacto" variant="primary">Solicita tu auditoría</Button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-pad {
+    padding: 4rem 0;
+  }
+
+  .bg-alt {
+    background: var(--color-section-alt);
+    color: var(--color-text);
+  }
+
+  .process__title {
+    margin: 0 0 2.5rem;
+    text-align: center;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+  }
+
+  .process__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .process-step {
+    padding: 1.5rem;
+    border-radius: 24px;
+    background: #fff;
+    box-shadow: var(--shadow-border);
+    border: 0;
+  }
+
+  .process-step__num {
+    font-size: 0.875rem;
+    font-weight: var(--fw-bold);
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .process-step h3 {
+    margin: 0 0 0.75rem;
+    font-size: 1.35rem;
+  }
+
+  .process-step > p {
+    margin: 0 0 1.25rem;
+    color: #555;
+    line-height: 1.6;
+  }
+
+  .process-step__card {
+    display: grid;
+    grid-template-columns: 120px 1fr;
+    gap: 1rem;
+    padding: 0.85rem;
+    /* Concentric with 24px parent + ~14px nest padding → ~12px inner */
+    border-radius: 12px;
+    background: #f7f8f8;
+  }
+
+  .process-step__card img {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+
+  .process-step__card-title {
+    margin: 0 0 0.35rem;
+    font-weight: var(--fw-semibold);
+    font-size: 0.9rem;
+  }
+
+  .process-step__card p:last-child {
+    margin: 0;
+    font-size: 0.85rem;
+    color: #555;
+    line-height: 1.45;
+  }
+
+  .process__cta {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 767px) {
+    .process__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .process-step__card {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

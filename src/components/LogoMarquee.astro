@@ -1,0 +1,55 @@
+---
+const logos = [
+  { src: '/images/resienciales.png', alt: 'Residenciales Mérida' },
+  { src: '/images/pass-20your.png', alt: 'Pass Your TOEFL' },
+  { src: '/images/basanlo.png', alt: 'Industrial Basanlo' },
+  { src: '/images/avant.png', alt: 'Avant Rent a Car' },
+  { src: '/images/diazar-20menu.png', alt: 'Diazar' },
+  {
+    src: '/images/f8943027258d6251d3de8e749b510626_peninsula-20project.png',
+    alt: 'Península Project',
+  },
+  { src: '/images/enfoque-2021-20logo-20menu.png', alt: 'Enfoque 21' },
+];
+
+const track = [...logos, ...logos];
+---
+
+<section class="marquee" aria-label="Clientes Hiweb" data-marquee>
+  <div class="marquee__track" data-marquee-track>
+    {
+      track.map((logo) => (
+        <div class="marquee__item">
+          <img src={logo.src} alt={logo.alt} loading="lazy" width="140" height="48" />
+        </div>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    padding: 1.5rem 0 2.5rem;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+
+  .marquee__track {
+    display: flex;
+    width: max-content;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .marquee__item {
+    flex: 0 0 auto;
+    opacity: 0.75;
+    filter: grayscale(1) brightness(1.2);
+  }
+
+  .marquee__item img {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+  }
+</style>

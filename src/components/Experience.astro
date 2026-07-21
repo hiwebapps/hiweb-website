@@ -1,0 +1,244 @@
+---
+interface Testimonial {
+  name: string;
+  role?: string | null;
+  company?: string | null;
+  quote: string;
+}
+
+interface Props {
+  testimonials: Testimonial[];
+}
+
+const { testimonials } = Astro.props;
+
+const avatars: Record<string, string> = {
+  'Gaby M.': '/images/toefl-review.png',
+  'Julia T.': '/images/paulos-rewiew.png',
+  'Sebastián S.': '/images/avant-review.jpg',
+  'David M.': '/images/diazar-review.png',
+};
+
+const stats = [
+  { prefix: '+', value: 10, suffix: ' años', label: 'De experiencia consolidando estrategias digitales para empresas que buscan escala y autoridad en su mercado.' },
+  { prefix: '+ $', value: 1000000, suffix: ' USD', label: 'En ingresos adicionales generados para nuestros clientes mediante la optimización de sus ecosistemas digitales.', format: 'compact' },
+  { prefix: '', value: 0, suffix: '', label: 'Operando desde Mérida con ejecución estratégica comprobada en México, Estados Unidos y Canadá.', staticLabel: 'Presencia Global' },
+  { prefix: '', value: 0, suffix: '', label: 'Lideramos la visibilidad de nuestros clientes mediante estrategias de AEO y SEO.', staticLabel: 'Dominio' },
+];
+---
+
+<section class="experience section-pad bg-cream" data-reveal>
+  <div class="padding-global">
+    <div class="container-large">
+      <h2 class="experience__title" data-reveal-item>Nuestra experiencia nos respalda</h2>
+
+      <div class="experience__stats">
+        {
+          stats.map((stat) => (
+            <article class="stat-card" data-reveal-item>
+              <p class="stat-card__value tabular-nums" data-counter={stat.staticLabel ? undefined : ''} data-prefix={stat.prefix} data-suffix={stat.suffix} data-target={stat.value} data-format={stat.format ?? 'plain'}>
+                {stat.staticLabel ?? `${stat.prefix}${stat.value}${stat.suffix}`}
+              </p>
+              <p class="stat-card__label">{stat.label}</p>
+            </article>
+          ))
+        }
+      </div>
+
+      <div class="experience__testimonials" data-testimonials>
+        <h3 data-reveal-item>Mira lo que dicen nuestros clientes</h3>
+        <div class="testimonials__viewport">
+          <div class="testimonials__track" data-testimonials-track>
+            {
+              testimonials.map((item) => (
+                <article class="testimonial-card">
+                  {avatars[item.name] ? (
+                    <img src={avatars[item.name]} alt="" class="testimonial-card__avatar" width="56" height="56" loading="lazy" />
+                  ) : (
+                    <div class="testimonial-card__avatar testimonial-card__avatar--fallback" aria-hidden="true" />
+                  )}
+                  <div>
+                    <p class="testimonial-card__name">{item.name}</p>
+                    <p class="testimonial-card__meta">
+                      {[item.company, item.role].filter(Boolean).join(' · ')}
+                    </p>
+                  </div>
+                  <p class="testimonial-card__quote">{item.quote}</p>
+                </article>
+              ))
+            }
+          </div>
+        </div>
+        <div class="testimonials__nav">
+          <button type="button" data-testimonials-prev aria-label="Anterior">‹</button>
+          <button type="button" data-testimonials-next aria-label="Siguiente">›</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-pad {
+    padding: 4rem 0;
+  }
+
+  .bg-cream {
+    background: linear-gradient(180deg, #fafafa 0%, #f0f2f7 100%);
+    color: var(--color-text);
+  }
+
+  .experience__title {
+    margin: 0 0 2rem;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    text-align: center;
+  }
+
+  .experience__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  .stat-card {
+    padding: 1.25rem;
+    border-radius: 20px;
+    background: #fff;
+    box-shadow: var(--shadow-border);
+    border: 0;
+  }
+
+  .stat-card__value {
+    margin: 0 0 0.5rem;
+    font-size: 1.75rem;
+    font-weight: var(--fw-semibold);
+    color: var(--color-page-bg);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stat-card__label {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #555;
+    line-height: 1.5;
+  }
+
+  .experience__testimonials h3 {
+    margin: 0 0 1.25rem;
+    font-size: 1.5rem;
+  }
+
+  .testimonials__viewport {
+    overflow: hidden;
+  }
+
+  .testimonials__track {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+  }
+
+  .testimonials__track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .testimonial-card {
+    flex: 0 0 min(320px, 85vw);
+    scroll-snap-align: start;
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 0.75rem 1rem;
+    padding: 1.25rem;
+    /* Concentric: 20 outer ≈ 28 avatar radius nest with padding */
+    border-radius: 20px;
+    background: #12141d;
+    color: #fff;
+    box-shadow: var(--shadow-border-dark);
+  }
+
+  .testimonial-card__avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    grid-row: span 2;
+  }
+
+  .testimonial-card__avatar--fallback {
+    background: #333;
+  }
+
+  .testimonial-card__name {
+    margin: 0;
+    font-weight: var(--fw-semibold);
+  }
+
+  .testimonial-card__meta {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--color-off-white);
+  }
+
+  .testimonial-card__quote {
+    grid-column: 1 / -1;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    color: #d8d8d8;
+  }
+
+  .testimonials__nav {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .testimonials__nav button {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    border-radius: 50%;
+    border: 0;
+    background: #fff;
+    box-shadow: var(--shadow-border);
+    font-size: 1.25rem;
+    cursor: pointer;
+    transition-property: box-shadow, scale;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out;
+  }
+
+  .testimonials__nav button::after {
+    content: '';
+    position: absolute;
+    inset: 50%;
+    width: 44px;
+    height: 44px;
+    transform: translate(-50%, -50%);
+  }
+
+  .testimonials__nav button:hover {
+    box-shadow: var(--shadow-border-hover);
+  }
+
+  .testimonials__nav button:active {
+    scale: 0.96;
+  }
+
+  @media (max-width: 991px) {
+    .experience__stats {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 479px) {
+    .experience__stats {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
