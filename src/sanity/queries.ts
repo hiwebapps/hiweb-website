@@ -24,9 +24,48 @@ export const siteSettingsQuery = defineQuery(`
     address,
     socialLinks,
     footerBlurb,
+    header{
+      brandLabel,
+      navLinks[]{ label, href },
+      whatsappLabel,
+      whatsappHref,
+      ctaLabel,
+      ctaHref
+    },
+    footer{
+      brandLabel,
+      blurb,
+      contactHeading,
+      phoneLabel,
+      phoneHref,
+      emailLabel,
+      emailHref,
+      servicesHeading,
+      serviceLinks[]{ label, href },
+      socialHeading,
+      socialNavLinks[]{ label, href },
+      presenceHeading,
+      presenceLinks[]{ label, href },
+      localesHeading,
+      localeLinks[]{ label, href }
+    },
     metaTitle,
     metaDescription,
     ogImage
+  }
+`);
+
+export const homePageQuery = defineQuery(`
+  *[_type == "homePage" && _id == "homePage"][0]{
+    title,
+    metaTitle,
+    metaDescription,
+    ogImage,
+    sections[]{
+      _key,
+      _type,
+      ...,
+    }
   }
 `);
 

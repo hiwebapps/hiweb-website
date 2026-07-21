@@ -1,5 +1,29 @@
 ---
+import { stegaClean } from '@sanity/client/stega';
 import Button from './Button.astro';
+
+interface FinalCtaSection {
+  title?: string;
+  body?: string;
+  primaryCtaLabel?: string;
+  primaryCtaHref?: string;
+  secondaryCtaLabel?: string;
+  secondaryCtaHref?: string;
+}
+
+interface Props {
+  section?: FinalCtaSection | null;
+}
+
+const { section } = Astro.props;
+const title = section?.title ?? 'Lleva tu negocio al siguiente nivel digital';
+const body =
+  section?.body ??
+  'Hiweb Marketing es tu agencia de marketing digital en México. Agenda una auditoría y conversemos sobre cómo escalar tus canales digitales.';
+const primaryCtaLabel = section?.primaryCtaLabel ?? 'Contáctanos';
+const primaryCtaHref = stegaClean(section?.primaryCtaHref ?? '/contacto');
+const secondaryCtaLabel = section?.secondaryCtaLabel ?? 'WhatsApp';
+const secondaryCtaHref = stegaClean(section?.secondaryCtaHref ?? 'https://wa.link/001xi3');
 ---
 
 <section class="final-cta section-pad bg-cream" data-reveal>
@@ -7,14 +31,11 @@ import Button from './Button.astro';
     <div class="container-large">
       <div class="final-cta__card" data-reveal-item>
         <div class="final-cta__copy">
-          <h2>Lleva tu negocio al siguiente nivel digital</h2>
-          <p>
-            Hiweb Marketing es tu agencia de marketing digital en México. Agenda una auditoría y conversemos sobre cómo
-            escalar tus canales digitales.
-          </p>
+          <h2>{title}</h2>
+          <p>{body}</p>
           <div class="final-cta__actions">
-            <Button href="/contacto" variant="primary">Contáctanos</Button>
-            <Button href="https://wa.link/001xi3" variant="whatsapp" target="_blank">WhatsApp</Button>
+            <Button href={primaryCtaHref} variant="primary">{primaryCtaLabel}</Button>
+            <Button href={secondaryCtaHref} variant="whatsapp" target="_blank">{secondaryCtaLabel}</Button>
           </div>
         </div>
         <img src="/images/recurso_white.png" alt="" class="final-cta__art" width="280" height="200" loading="lazy" />

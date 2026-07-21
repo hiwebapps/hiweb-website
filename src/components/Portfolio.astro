@@ -1,5 +1,27 @@
 ---
-const projects = [
+import { stegaClean } from '@sanity/client/stega';
+
+interface Project {
+  title?: string;
+  href?: string;
+  image?: string;
+  imageSrc?: string;
+  tags?: string;
+  summary?: string;
+}
+
+interface PortfolioSection {
+  title?: string;
+  viewAllLabel?: string;
+  viewAllHref?: string;
+  projects?: Project[];
+}
+
+interface Props {
+  section?: PortfolioSection | null;
+}
+
+const defaultProjects: Project[] = [
   {
     title: 'Avant Rent a Car',
     href: '/portafolio/avant-rent-a-car',
@@ -33,14 +55,24 @@ const projects = [
       'Península Project buscaba reconocimiento en un mercado turístico competitivo y atraer viajeros con experiencias auténticas vía redes y pauta.',
   },
 ];
+
+const { section } = Astro.props;
+const title = section?.title ?? 'Resultados comprobados, proyectos que resaltan.';
+const viewAllLabel = section?.viewAllLabel ?? 'Ver todos los proyectos';
+const viewAllHref = stegaClean(section?.viewAllHref ?? '/portafolio');
+const projects = (section?.projects?.length ? section.projects : defaultProjects).map((p) => ({
+  ...p,
+  href: stegaClean(p.href ?? '#'),
+  image: stegaClean(p.imageSrc ?? p.image ?? ''),
+}));
 ---
 
 <section class="portfolio section-pad bg-alt" data-reveal>
   <div class="padding-global">
     <div class="container-large">
       <div class="portfolio__header" data-reveal-item>
-        <h2>Resultados comprobados, proyectos que resaltan.</h2>
-        <a href="/portafolio" class="portfolio__all">Ver todos los proyectos</a>
+        <h2>{title}</h2>
+        <a href={viewAllHref} class="portfolio__all">{viewAllLabel}</a>
       </div>
 
       <div class="portfolio__grid">

@@ -1,6 +1,9 @@
 import type { StructureResolver } from 'sanity/structure';
 
-const SINGLETONS = [{ type: 'siteSettings', title: 'Configuración del sitio', id: 'siteSettings' }];
+const SINGLETONS = [
+  { type: 'homePage', title: 'Home (página)', id: 'homePage' },
+  { type: 'siteSettings', title: 'Configuración del sitio', id: 'siteSettings' },
+];
 
 export const structure: StructureResolver = (S) =>
   S.list()
@@ -15,7 +18,11 @@ export const structure: StructureResolver = (S) =>
               S.listItem()
                 .title('Artículos')
                 .schemaType('post')
-                .child(S.documentTypeList('post').title('Artículos').defaultOrdering([{ field: 'publishedAt', direction: 'desc' }])),
+                .child(
+                  S.documentTypeList('post')
+                    .title('Artículos')
+                    .defaultOrdering([{ field: 'publishedAt', direction: 'desc' }]),
+                ),
               S.listItem()
                 .title('Autores')
                 .schemaType('author')
@@ -27,23 +34,6 @@ export const structure: StructureResolver = (S) =>
             ]),
         ),
       S.divider(),
-      S.listItem()
-        .title('Home')
-        .child(
-          S.list()
-            .title('Contenido de la home')
-            .items([
-              S.listItem()
-                .title('Testimonios')
-                .schemaType('testimonial')
-                .child(S.documentTypeList('testimonial').title('Testimonios').defaultOrdering([{ field: 'order', direction: 'asc' }])),
-              S.listItem()
-                .title('FAQs')
-                .schemaType('faq')
-                .child(S.documentTypeList('faq').title('FAQs').defaultOrdering([{ field: 'order', direction: 'asc' }])),
-            ]),
-        ),
-      S.divider(),
       ...SINGLETONS.map((item) =>
         S.listItem()
           .title(item.title)
@@ -51,7 +41,41 @@ export const structure: StructureResolver = (S) =>
           .child(S.document().schemaType(item.type).documentId(item.id).title(item.title)),
       ),
       S.divider(),
+      S.listItem()
+        .title('Home — listas')
+        .child(
+          S.list()
+            .title('Contenido reutilizable de la home')
+            .items([
+              S.listItem()
+                .title('Testimonios')
+                .schemaType('testimonial')
+                .child(
+                  S.documentTypeList('testimonial')
+                    .title('Testimonios')
+                    .defaultOrdering([{ field: 'order', direction: 'asc' }]),
+                ),
+              S.listItem()
+                .title('FAQs')
+                .schemaType('faq')
+                .child(
+                  S.documentTypeList('faq')
+                    .title('FAQs')
+                    .defaultOrdering([{ field: 'order', direction: 'asc' }]),
+                ),
+            ]),
+        ),
+      S.divider(),
       ...S.documentTypeListItems().filter(
-        (listItem) => !['post', 'author', 'category', 'testimonial', 'faq', 'siteSettings'].includes(listItem.getId() ?? ''),
+        (item) =>
+          ![
+            'post',
+            'author',
+            'category',
+            'testimonial',
+            'faq',
+            'siteSettings',
+            'homePage',
+          ].includes(item.getId() ?? ''),
       ),
     ]);

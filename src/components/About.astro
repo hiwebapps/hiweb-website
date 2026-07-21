@@ -1,21 +1,46 @@
 ---
-const points = [
+import { stegaClean } from '@sanity/client/stega';
+
+interface AboutPoint {
+  title?: string;
+  text?: string;
+}
+
+interface AboutSection {
+  title?: string;
+  body?: string;
+  points?: AboutPoint[];
+  imageSrc?: string;
+  imageAlt?: string;
+}
+
+interface Props {
+  section?: AboutSection | null;
+}
+
+const defaultPoints: AboutPoint[] = [
   { title: 'Estrategia por intención:', text: 'Atraemos, nutrimos y cerramos.' },
   { title: 'Infraestructura técnica:', text: 'Web, SEO y automatización de procesos.' },
   { title: 'Visibilidad real:', text: 'Tracking continuo y optimización de conversiones.' },
   { title: 'Soporte local:', text: 'Consultoría estratégica con base en el sureste de México.' },
 ];
+
+const { section } = Astro.props;
+const title = section?.title ?? 'El socio estratégico para escalar tu operación en México';
+const body =
+  section?.body ??
+  'Deja de contratar servicios aislados y empieza a construir un ecosistema digital. En Hiweb unificamos estrategia, pauta y tecnología para convertir tu inversión en un motor de leads constante.';
+const points = section?.points?.length ? section.points : defaultPoints;
+const imageSrc = stegaClean(section?.imageSrc ?? '/images/hiweb-20team.avif');
+const imageAlt = section?.imageAlt ?? 'Equipo Hiweb';
 ---
 
 <section class="about section-pad bg-cream" data-reveal>
   <div class="padding-global">
     <div class="container-large about__grid">
       <div class="about__copy">
-        <h2 data-reveal-item>El socio estratégico para escalar tu operación en México</h2>
-        <p data-reveal-item>
-          Deja de contratar servicios aislados y empieza a construir un ecosistema digital. En Hiweb
-          <strong>unificamos estrategia, pauta y tecnología para convertir tu inversión en un motor de leads constante.</strong>
-        </p>
+        <h2 data-reveal-item>{title}</h2>
+        <p data-reveal-item>{body}</p>
         <ul class="about__list">
           {
             points.map((item) => (
@@ -41,10 +66,10 @@ const points = [
       </div>
       <div class="about__media" data-reveal-item>
         <img
-          src="/images/hiweb-20team.avif"
+          src={imageSrc}
           srcset="/images/hiweb-20team-p-800.avif 800w, /images/hiweb-20team-p-1600.avif 1600w, /images/hiweb-20team.avif 2000w"
           sizes="(max-width: 991px) 100vw, 50vw"
-          alt="Equipo Hiweb"
+          alt={imageAlt}
           width="800"
           height="600"
           loading="lazy"

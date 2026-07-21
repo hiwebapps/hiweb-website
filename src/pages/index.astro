@@ -1,40 +1,39 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Hero from '../components/Hero.astro';
-import About from '../components/About.astro';
-import Services from '../components/Services.astro';
-import Portfolio from '../components/Portfolio.astro';
-import Experience from '../components/Experience.astro';
-import Process from '../components/Process.astro';
-import Faq from '../components/Faq.astro';
-import FinalCta from '../components/FinalCta.astro';
-import { faqsQuery, testimonialsQuery } from '../sanity/queries';
+import SectionRenderer from '../components/SectionRenderer.astro';
+import { faqsQuery, homePageQuery, testimonialsQuery } from '../sanity/queries';
 import { loadQuery } from '../sanity/lib/load-query';
 import { getDraftModeProps } from '../sanity/lib/draft-mode';
+import { urlFor } from '../sanity/image';
 
 export const prerender = false;
 
 const draft = getDraftModeProps(Astro.cookies);
 
-const [{ data: testimonials }, { data: faqs }] = await Promise.all([
+const [{ data: homePage }, { data: testimonials }, { data: faqs }] = await Promise.all([
+  loadQuery({ query: homePageQuery, ...draft }),
   loadQuery({ query: testimonialsQuery, ...draft }),
   loadQuery({ query: faqsQuery, ...draft }),
 ]);
+
+const title =
+  homePage?.metaTitle ??
+  homePage?.title ??
+  'Digital Marketing Agency in Mexico | Hiweb';
+const description =
+  homePage?.metaDescription ??
+  'Agencia de marketing digital en México. SEO, Ads, redes sociales y desarrollo web con resultados medibles. Agenda tu auditoría.';
+const ogImage = homePage?.ogImage
+  ? urlFor(homePage.ogImage).width(1200).height(630).url()
+  : '/images/hiweb-20team.avif';
 ---
 
-<Layout
-  title="Digital Marketing Agency in Mexico | Hiweb"
-  description="Agencia de marketing digital en México. SEO, Ads, redes sociales y desarrollo web con resultados medibles. Agenda tu auditoría."
-  ogImage="/images/hiweb-20team.avif"
->
-  <Hero />
-  <About />
-  <Services />
-  <Portfolio />
-  <Experience testimonials={testimonials ?? []} />
-  <Process />
-  <Faq faqs={faqs ?? []} />
-  <FinalCta />
+<Layout title={title} description={description} ogImage={ogImage}>
+  <SectionRenderer
+    sections={homePage?.sections}
+    testimonials={testimonials ?? []}
+    faqs={faqs ?? []}
+  />
 </Layout>
 
 <script>

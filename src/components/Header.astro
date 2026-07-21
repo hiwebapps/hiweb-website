@@ -1,8 +1,43 @@
 ---
+import { stegaClean } from '@sanity/client/stega';
 import Button from './Button.astro';
 import MegaMenuIcon from './MegaMenuIcon.astro';
 
+interface NavLink {
+  label?: string;
+  href?: string;
+}
+
+interface HeaderSettings {
+  brandLabel?: string;
+  navLinks?: NavLink[];
+  whatsappLabel?: string;
+  whatsappHref?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+}
+
+interface Props {
+  header?: HeaderSettings | null;
+}
+
+const { header } = Astro.props;
 const pathname = Astro.url.pathname;
+
+const brandLabel = header?.brandLabel ?? 'Hiweb';
+const whatsappLabel = header?.whatsappLabel ?? 'WhatsApp';
+const whatsappHref = stegaClean(header?.whatsappHref ?? 'https://wa.link/001xi3');
+const ctaLabel = header?.ctaLabel ?? 'Agenda tu Auditoría';
+const ctaHref = stegaClean(header?.ctaHref ?? '/contacto');
+
+const defaultNavLinks: NavLink[] = [
+  { label: 'Casos de Éxito', href: '/portafolio' },
+  { label: 'Blog', href: '/blogs' },
+];
+const navLinks = (header?.navLinks?.length ? header.navLinks : defaultNavLinks).map((l) => ({
+  label: l.label ?? '',
+  href: stegaClean(l.href ?? '#'),
+}));
 
 /** Placeholder mega-menu — swap copy/icons when final Servicios IA is ready */
 const megaMenu = [
@@ -106,10 +141,11 @@ const megaMenu = [
   },
 ] as const;
 
-const exploreLinks = [
-  { href: '/portafolio', title: 'Casos de Éxito', icon: 'portfolio' },
-  { href: '/blogs', title: 'Blog', icon: 'newspaper' },
-] as const;
+const exploreLinks = navLinks.map((l) => ({
+  href: l.href,
+  title: l.label,
+  icon: l.href.includes('blog') ? 'newspaper' : 'portfolio',
+}));
 
 const isHome = pathname === '/' || pathname === '';
 ---
@@ -173,9 +209,9 @@ const isHome = pathname === '/' || pathname === '';
     <div class="nav__highlight" aria-hidden="true"></div>
 
     <div class="nav__bar">
-      <a href="/" class:list={['nav__brand', { 'is-current': isHome }]} aria-label="Hiweb inicio">
+      <a href="/" class:list={['nav__brand', { 'is-current': isHome }]} aria-label={`${brandLabel} inicio`}>
         <img src="/images/isotipo-20hiweb.png" width="27" height="27" alt="" class="nav__logo" />
-        <span class="nav__brand-text">Hiweb</span>
+        <span class="nav__brand-text">{brandLabel}</span>
       </a>
 
       <button
@@ -228,17 +264,24 @@ const isHome = pathname === '/' || pathname === '';
               }
             </div>
           </li>
-          <li class="nav__item">
-            <a href="/portafolio" class="nav__link">Casos de Éxito</a>
-          </li>
-          <li class="nav__item">
-            <a href="/blogs" class="nav__link">Blog</a>
-          </li>
+          {
+            navLinks.map((link) => (
+              <li class="nav__item">
+                <a href={link.href} class="nav__link">
+                  {link.label}
+                </a>
+              </li>
+            ))
+          }
         </ul>
 
         <div class="nav__ctas">
-          <Button href="https://wa.link/001xi3" variant="whatsapp" target="_blank">WhatsApp</Button>
-          <Button href="/contacto" variant="primary">Agenda tu Auditoría</Button>
+          <Button href={whatsappHref} variant="whatsapp" target="_blank">
+            {whatsappLabel}
+          </Button>
+          <Button href={ctaHref} variant="primary">
+            {ctaLabel}
+          </Button>
         </div>
       </nav>
     </div>
@@ -249,12 +292,12 @@ const isHome = pathname === '/' || pathname === '';
 <div class="nav-sheet" id="nav-sheet" data-nav-sheet hidden aria-hidden="true" role="dialog" aria-modal="true" aria-label="Menú">
   <div class="nav-sheet__top">
     <div class="nav-sheet__header" data-sheet-header>
-      <a href="/" class="nav-sheet__brand" aria-label="Hiweb inicio">
+      <a href="/" class="nav-sheet__brand" aria-label={`${brandLabel} inicio`}>
         <img src="/images/isotipo-20hiweb.png" width="27" height="27" alt="" class="nav-sheet__logo" />
-        <span class="nav-sheet__brand-text">Hiweb</span>
+        <span class="nav-sheet__brand-text">{brandLabel}</span>
       </a>
       <div class="nav-sheet__header-actions">
-        <a href="/contacto" class="nav-sheet__pill">Agenda</a>
+        <a href={ctaHref} class="nav-sheet__pill">Agenda</a>
         <button type="button" class="nav-sheet__close" data-nav-sheet-close aria-label="Cerrar menú">
           <MegaMenuIcon name="close" />
         </button>
@@ -303,10 +346,10 @@ const isHome = pathname === '/' || pathname === '';
   </div>
 
   <div class="nav-sheet__footer" data-sheet-footer>
-    <a href="https://wa.link/001xi3" class="nav-sheet__cta nav-sheet__cta--ghost" target="_blank" rel="noopener noreferrer">
-      WhatsApp
+    <a href={whatsappHref} class="nav-sheet__cta nav-sheet__cta--ghost" target="_blank" rel="noopener noreferrer">
+      {whatsappLabel}
     </a>
-    <a href="/contacto" class="nav-sheet__cta nav-sheet__cta--primary">Agenda tu Auditoría</a>
+    <a href={ctaHref} class="nav-sheet__cta nav-sheet__cta--primary">{ctaLabel}</a>
   </div>
 </div>
 

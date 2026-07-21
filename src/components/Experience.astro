@@ -6,11 +6,27 @@ interface Testimonial {
   quote: string;
 }
 
-interface Props {
-  testimonials: Testimonial[];
+interface ExperienceStat {
+  prefix?: string;
+  value?: number;
+  suffix?: string;
+  label?: string;
+  format?: string;
+  staticLabel?: string;
 }
 
-const { testimonials } = Astro.props;
+interface ExperienceSection {
+  title?: string;
+  stats?: ExperienceStat[];
+  testimonialsTitle?: string;
+}
+
+interface Props {
+  testimonials: Testimonial[];
+  section?: ExperienceSection | null;
+}
+
+const { testimonials, section } = Astro.props;
 
 const avatars: Record<string, string> = {
   'Gaby M.': '/images/toefl-review.png',
@@ -19,24 +35,60 @@ const avatars: Record<string, string> = {
   'David M.': '/images/diazar-review.png',
 };
 
-const stats = [
-  { prefix: '+', value: 10, suffix: ' años', label: 'De experiencia consolidando estrategias digitales para empresas que buscan escala y autoridad en su mercado.' },
-  { prefix: '+ $', value: 1000000, suffix: ' USD', label: 'En ingresos adicionales generados para nuestros clientes mediante la optimización de sus ecosistemas digitales.', format: 'compact' },
-  { prefix: '', value: 0, suffix: '', label: 'Operando desde Mérida con ejecución estratégica comprobada en México, Estados Unidos y Canadá.', staticLabel: 'Presencia Global' },
-  { prefix: '', value: 0, suffix: '', label: 'Lideramos la visibilidad de nuestros clientes mediante estrategias de AEO y SEO.', staticLabel: 'Dominio' },
+const defaultStats: ExperienceStat[] = [
+  {
+    prefix: '+',
+    value: 10,
+    suffix: ' años',
+    label:
+      'De experiencia consolidando estrategias digitales para empresas que buscan escala y autoridad en su mercado.',
+  },
+  {
+    prefix: '+ $',
+    value: 1000000,
+    suffix: ' USD',
+    label:
+      'En ingresos adicionales generados para nuestros clientes mediante la optimización de sus ecosistemas digitales.',
+    format: 'compact',
+  },
+  {
+    prefix: '',
+    value: 0,
+    suffix: '',
+    label: 'Operando desde Mérida con ejecución estratégica comprobada en México, Estados Unidos y Canadá.',
+    staticLabel: 'Presencia Global',
+  },
+  {
+    prefix: '',
+    value: 0,
+    suffix: '',
+    label: 'Lideramos la visibilidad de nuestros clientes mediante estrategias de AEO y SEO.',
+    staticLabel: 'Dominio',
+  },
 ];
+
+const title = section?.title ?? 'Nuestra experiencia nos respalda';
+const testimonialsTitle = section?.testimonialsTitle ?? 'Mira lo que dicen nuestros clientes';
+const stats = section?.stats?.length ? section.stats : defaultStats;
 ---
 
 <section class="experience section-pad bg-cream" data-reveal>
   <div class="padding-global">
     <div class="container-large">
-      <h2 class="experience__title" data-reveal-item>Nuestra experiencia nos respalda</h2>
+      <h2 class="experience__title" data-reveal-item>{title}</h2>
 
       <div class="experience__stats">
         {
           stats.map((stat) => (
             <article class="stat-card" data-reveal-item>
-              <p class="stat-card__value tabular-nums" data-counter={stat.staticLabel ? undefined : ''} data-prefix={stat.prefix} data-suffix={stat.suffix} data-target={stat.value} data-format={stat.format ?? 'plain'}>
+              <p
+                class="stat-card__value tabular-nums"
+                data-counter={stat.staticLabel ? undefined : ''}
+                data-prefix={stat.prefix}
+                data-suffix={stat.suffix}
+                data-target={stat.value}
+                data-format={stat.format ?? 'plain'}
+              >
                 {stat.staticLabel ?? `${stat.prefix}${stat.value}${stat.suffix}`}
               </p>
               <p class="stat-card__label">{stat.label}</p>
@@ -46,14 +98,21 @@ const stats = [
       </div>
 
       <div class="experience__testimonials" data-testimonials>
-        <h3 data-reveal-item>Mira lo que dicen nuestros clientes</h3>
+        <h3 data-reveal-item>{testimonialsTitle}</h3>
         <div class="testimonials__viewport">
           <div class="testimonials__track" data-testimonials-track>
             {
               testimonials.map((item) => (
                 <article class="testimonial-card">
                   {avatars[item.name] ? (
-                    <img src={avatars[item.name]} alt="" class="testimonial-card__avatar" width="56" height="56" loading="lazy" />
+                    <img
+                      src={avatars[item.name]}
+                      alt=""
+                      class="testimonial-card__avatar"
+                      width="56"
+                      height="56"
+                      loading="lazy"
+                    />
                   ) : (
                     <div class="testimonial-card__avatar testimonial-card__avatar--fallback" aria-hidden="true" />
                   )}
@@ -70,8 +129,12 @@ const stats = [
           </div>
         </div>
         <div class="testimonials__nav">
-          <button type="button" data-testimonials-prev aria-label="Anterior">‹</button>
-          <button type="button" data-testimonials-next aria-label="Siguiente">›</button>
+          <button type="button" data-testimonials-prev aria-label="Anterior">
+            ‹
+          </button>
+          <button type="button" data-testimonials-next aria-label="Siguiente">
+            ›
+          </button>
         </div>
       </div>
     </div>

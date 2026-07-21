@@ -1,5 +1,60 @@
 ---
-const social = [
+import { stegaClean } from '@sanity/client/stega';
+
+interface NavLink {
+  label?: string;
+  href?: string;
+}
+
+interface FooterSettings {
+  brandLabel?: string;
+  blurb?: string;
+  contactHeading?: string;
+  phoneLabel?: string;
+  phoneHref?: string;
+  emailLabel?: string;
+  emailHref?: string;
+  servicesHeading?: string;
+  serviceLinks?: NavLink[];
+  socialHeading?: string;
+  socialNavLinks?: NavLink[];
+  presenceHeading?: string;
+  presenceLinks?: NavLink[];
+  localesHeading?: string;
+  localeLinks?: NavLink[];
+}
+
+interface Props {
+  footer?: FooterSettings | null;
+}
+
+const { footer } = Astro.props;
+
+const brandLabel = footer?.brandLabel ?? 'Hiweb Marketing';
+const blurb =
+  footer?.blurb ??
+  'Hiweb Marketing es tu agencia de marketing digital en México. Ofrecemos soluciones personalizadas en Redes Sociales, SEO, Diseño web, SEM y más, para impulsar el crecimiento de tu negocio online.';
+const contactHeading = footer?.contactHeading ?? 'Contáctanos';
+const phoneLabel = footer?.phoneLabel ?? '999-560-2388';
+const phoneHref = stegaClean(footer?.phoneHref ?? 'tel:9995602388');
+const emailLabel = footer?.emailLabel ?? 'admin@hiwebmarketing.com';
+const emailHref = stegaClean(
+  footer?.emailHref ??
+    'mailto:info@hiwebmarketing.com?subject=Hola!%20Me%20gustar%C3%ADa%20obtener%20ayuda',
+);
+const servicesHeading = footer?.servicesHeading ?? 'Servicios';
+const socialHeading = footer?.socialHeading ?? 'Redes Sociales';
+const presenceHeading = footer?.presenceHeading ?? 'Presencia';
+const localesHeading = footer?.localesHeading ?? 'Idiomas';
+
+const defaultServices: NavLink[] = [
+  { href: '/servicios/agencia-posicionamiento-seo', label: 'SEO' },
+  { href: '/servicios/diseno-desarrollo-web-mexico', label: 'Desarrollo Web' },
+  { href: '/servicios/agencia-redes-sociales', label: 'Redes Sociales' },
+  { href: '/servicios/meta-ads-publicidad-redes-sociales', label: 'Publicidad en Redes' },
+];
+
+const defaultSocial: { href: string; label: string; icon: string }[] = [
   {
     href: 'https://instagram.com/hiweb.mx/',
     label: 'Instagram',
@@ -22,12 +77,42 @@ const social = [
   },
 ];
 
-const services = [
-  { href: '/servicios/agencia-posicionamiento-seo', label: 'SEO' },
-  { href: '/servicios/diseno-desarrollo-web-mexico', label: 'Desarrollo Web' },
-  { href: '/servicios/agencia-redes-sociales', label: 'Redes Sociales' },
-  { href: '/servicios/meta-ads-publicidad-redes-sociales', label: 'Publicidad en Redes' },
+const defaultPresence: NavLink[] = [
+  { href: '/estados/agencia-de-marketing-digital-en-cancun', label: 'Cancún' },
+  { href: '/estados/agencia-de-marketing-digital-en-monterrey', label: 'Monterrey' },
 ];
+
+const defaultLocales: NavLink[] = [
+  { href: '/', label: 'Español' },
+  { href: '/en', label: 'English' },
+];
+
+const services = (footer?.serviceLinks?.length ? footer.serviceLinks : defaultServices).map((item) => ({
+  label: item.label ?? '',
+  href: stegaClean(item.href ?? '#'),
+}));
+
+const socialFromCms = footer?.socialNavLinks?.length
+  ? footer.socialNavLinks.map((item) => {
+      const label = item.label ?? '';
+      const match = defaultSocial.find((s) => s.label.toLowerCase() === label.toLowerCase());
+      return {
+        label,
+        href: stegaClean(item.href ?? '#'),
+        icon: match?.icon ?? defaultSocial[0].icon,
+      };
+    })
+  : defaultSocial;
+
+const presence = (footer?.presenceLinks?.length ? footer.presenceLinks : defaultPresence).map((item) => ({
+  label: item.label ?? '',
+  href: stegaClean(item.href ?? '#'),
+}));
+
+const locales = (footer?.localeLinks?.length ? footer.localeLinks : defaultLocales).map((item) => ({
+  label: item.label ?? '',
+  href: stegaClean(item.href ?? '#'),
+}));
 ---
 
 <footer class="footer">
@@ -38,29 +123,21 @@ const services = [
       <div class="footer__inner">
         <div class="footer__top">
           <div class="footer__brand">
-            <a href="/" class="footer__brand-link">Hiweb Marketing</a>
-            <p class="footer__blurb">
-              <strong>Hiweb Marketing</strong> es tu
-              <a href="/"><strong>agencia de marketing digital</strong></a>
-              en México. Ofrecemos soluciones personalizadas en Redes Sociales, SEO, Diseño web, SEM y más, para
-              impulsar el crecimiento de tu negocio online.
-            </p>
+            <a href="/" class="footer__brand-link">{brandLabel}</a>
+            <p class="footer__blurb">{blurb}</p>
           </div>
 
           <div class="footer__menus">
             <div class="footer__col">
-              <p class="footer__heading">Contáctanos</p>
-              <a href="tel:9995602388" class="footer__link"><strong>999-560-2388</strong></a>
-              <a
-                href="mailto:info@hiwebmarketing.com?subject=Hola!%20Me%20gustar%C3%ADa%20obtener%20ayuda"
-                class="footer__link"
-              >
-                <strong>admin@hiwebmarketing.com</strong>
+              <p class="footer__heading">{contactHeading}</p>
+              <a href={phoneHref} class="footer__link"><strong>{phoneLabel}</strong></a>
+              <a href={emailHref} class="footer__link">
+                <strong>{emailLabel}</strong>
               </a>
             </div>
 
             <div class="footer__col">
-              <p class="footer__heading">Servicios</p>
+              <p class="footer__heading">{servicesHeading}</p>
               {
                 services.map((item) => (
                   <a href={item.href} class="footer__link">
@@ -71,9 +148,9 @@ const services = [
             </div>
 
             <div class="footer__col">
-              <p class="footer__heading">Redes Sociales</p>
+              <p class="footer__heading">{socialHeading}</p>
               {
-                social.map((item) => (
+                socialFromCms.map((item) => (
                   <a href={item.href} class="footer__social" target="_blank" rel="noopener noreferrer">
                     <span class="footer__social-icon" set:html={item.icon} />
                     <span>{item.label}</span>
@@ -83,19 +160,29 @@ const services = [
             </div>
 
             <div class="footer__col">
-              <p class="footer__heading">Presencia</p>
-              <a href="/estados/agencia-de-marketing-digital-en-cancun" class="footer__link">
-                <strong>Cancún</strong>
-              </a>
-              <a href="/estados/agencia-de-marketing-digital-en-monterrey" class="footer__link">
-                <strong>Monterrey</strong>
-              </a>
+              <p class="footer__heading">{presenceHeading}</p>
+              {
+                presence.map((item) => (
+                  <a href={item.href} class="footer__link">
+                    <strong>{item.label}</strong>
+                  </a>
+                ))
+              }
             </div>
 
             <div class="footer__col">
-              <p class="footer__heading">Idiomas</p>
-              <a href="/" hreflang="es-MX" class="footer__link">Español</a>
-              <a href="/en" hreflang="en-US" class="footer__link">English</a>
+              <p class="footer__heading">{localesHeading}</p>
+              {
+                locales.map((item) => (
+                  <a
+                    href={item.href}
+                    hreflang={item.label.toLowerCase().includes('eng') ? 'en-US' : 'es-MX'}
+                    class="footer__link"
+                  >
+                    {item.label}
+                  </a>
+                ))
+              }
             </div>
           </div>
         </div>

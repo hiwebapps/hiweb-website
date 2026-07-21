@@ -1,0 +1,64 @@
+---
+import { stegaClean } from '@sanity/client/stega';
+import Hero from './Hero.astro';
+import About from './About.astro';
+import Services from './Services.astro';
+import Portfolio from './Portfolio.astro';
+import Experience from './Experience.astro';
+import Process from './Process.astro';
+import Faq from './Faq.astro';
+import FinalCta from './FinalCta.astro';
+
+type Section = {
+  _key?: string;
+  _type: string;
+  [key: string]: unknown;
+};
+
+interface Props {
+  sections?: Section[] | null;
+  testimonials?: unknown[];
+  faqs?: unknown[];
+}
+
+const { sections = [], testimonials = [], faqs = [] } = Astro.props;
+
+const list = sections?.length
+  ? sections
+  : [
+      { _type: 'homeHero' },
+      { _type: 'homeAbout' },
+      { _type: 'homeServices' },
+      { _type: 'homePortfolio' },
+      { _type: 'homeExperience' },
+      { _type: 'homeProcess' },
+      { _type: 'homeFaq' },
+      { _type: 'homeFinalCta' },
+    ];
+---
+
+{
+  list.map((section) => {
+    const type = stegaClean(section._type);
+    switch (type) {
+      case 'homeHero':
+        return <Hero section={section} />;
+      case 'homeAbout':
+        return <About section={section} />;
+      case 'homeServices':
+        return <Services section={section} />;
+      case 'homePortfolio':
+        return <Portfolio section={section} />;
+      case 'homeExperience':
+        return <Experience section={section} testimonials={testimonials} />;
+      case 'homeProcess':
+        return <Process section={section} />;
+      case 'homeFaq':
+        return <Faq section={section} faqs={faqs} />;
+      case 'homeFinalCta':
+        return <FinalCta section={section} />;
+      default:
+        return null;
+    }
+  })
+}

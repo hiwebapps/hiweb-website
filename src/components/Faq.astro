@@ -1,27 +1,48 @@
 ---
+import { stegaClean } from '@sanity/client/stega';
+
 interface FaqItem {
   question: string;
   answer: string;
   category: string;
 }
 
-interface Props {
-  faqs: FaqItem[];
+interface FaqTab {
+  id?: string;
+  label?: string;
 }
 
-const { faqs } = Astro.props;
+interface FaqSection {
+  title?: string;
+  tabs?: FaqTab[];
+  emptyState?: string;
+}
 
-const tabs = [
+interface Props {
+  faqs: FaqItem[];
+  section?: FaqSection | null;
+}
+
+const { faqs, section } = Astro.props;
+
+const defaultTabs = [
   { id: 'general', label: 'General' },
   { id: 'redes', label: 'Redes Sociales' },
   { id: 'seo', label: 'SEO' },
 ];
+
+const title = section?.title ?? '¿Tienes dudas? Tenemos respuestas';
+const emptyState = section?.emptyState ?? 'Pronto más respuestas en esta categoría.';
+const tabs = (section?.tabs?.length ? section.tabs : defaultTabs).map((t) => ({
+  id: stegaClean(t.id ?? 'general'),
+  label: t.label ?? t.id ?? '',
+}));
 ---
 
 <section class="faq section-pad bg-cream" data-faq data-reveal>
   <div class="padding-global">
     <div class="container-large">
-      <h2 data-reveal-item>¿Tienes dudas? Tenemos respuestas</h2>
+      <h2 data-reveal-item>{title}</h2>
 
       <div class="faq__tabs" role="tablist" data-reveal-item>
         {
@@ -41,7 +62,7 @@ const tabs = [
 
       {
         tabs.map((tab, i) => {
-          const items = faqs.filter((f) => f.category === tab.id);
+          const items = faqs.filter((f) => stegaClean(f.category) === tab.id);
           return (
             <div
               class:list={['faq__panel', { 'is-active': i === 0 }]}
@@ -57,7 +78,7 @@ const tabs = [
                   </details>
                 ))
               ) : (
-                <p class="faq__empty">Pronto más respuestas en esta categoría.</p>
+                <p class="faq__empty">{emptyState}</p>
               )}
             </div>
           );

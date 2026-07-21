@@ -1,4 +1,5 @@
 ---
+import { stegaClean } from '@sanity/client/stega';
 import Button from './Button.astro';
 
 export interface HeroMarqueeItem {
@@ -6,8 +7,18 @@ export interface HeroMarqueeItem {
   alt: string;
 }
 
+interface HeroSection {
+  eyebrow?: string;
+  title?: string;
+  lede?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  marqueeAriaLabel?: string;
+  marqueeItems?: HeroMarqueeItem[];
+}
+
 interface Props {
-  /** Portfolio thumbnails for the infinite marquee. Swap with Sanity assets later. */
+  section?: HeroSection | null;
   marqueeItems?: HeroMarqueeItem[];
 }
 
@@ -24,7 +35,20 @@ const defaultMarqueeItems: HeroMarqueeItem[] = [
   },
 ];
 
-const { marqueeItems = defaultMarqueeItems } = Astro.props;
+const { section, marqueeItems: marqueeProp } = Astro.props;
+const eyebrow = section?.eyebrow ?? 'Agencia de Marketing Digital';
+const title =
+  section?.title ??
+  'Agencia de Marketing Digital en México: SEO, Ads, Redes Sociales, Diseño Web y Más';
+const lede =
+  section?.lede ??
+  'Hiweb es una agencia de marketing digital en México que ayuda a empresas a generar leads y ventas con SEO, Ads, redes sociales y desarrollo web. Diseñamos estrategia, ejecutamos y medimos ROI con reporting claro.';
+const ctaLabel = section?.ctaLabel ?? 'Agenda tu Auditoría';
+const ctaHref = stegaClean(section?.ctaHref ?? '/contacto');
+const marqueeAriaLabel = section?.marqueeAriaLabel ?? 'Proyectos Hiweb';
+const marqueeItems =
+  marqueeProp ??
+  (section?.marqueeItems?.length ? section.marqueeItems : defaultMarqueeItems);
 ---
 
 <section class="hero" data-hero>
@@ -41,18 +65,16 @@ const { marqueeItems = defaultMarqueeItems } = Astro.props;
     <div class="padding-global">
       <div class="hero__content">
         <div class="hero__eyebrow" data-hero-item>
-          <span>Agencia de Marketing Digital</span>
+          <span>{eyebrow}</span>
         </div>
         <h1 class="hero__title" data-hero-item>
-          Agencia de Marketing Digital en México: SEO, Ads, Redes Sociales, Diseño Web y Más
+          {title}
         </h1>
         <p class="hero__lede" data-hero-item>
-          Hiweb es una <strong>agencia de marketing digital en México</strong> que ayuda a empresas a generar leads y
-          ventas con <strong>SEO, Ads, redes sociales y desarrollo web</strong>. Diseñamos estrategia, ejecutamos y
-          medimos ROI con reporting claro.
+          {lede}
         </p>
         <div class="hero__cta" data-hero-item>
-          <Button href="/contacto" variant="primary">Agenda tu Auditoría</Button>
+          <Button href={ctaHref} variant="primary">{ctaLabel}</Button>
         </div>
       </div>
     </div>
@@ -60,13 +82,13 @@ const { marqueeItems = defaultMarqueeItems } = Astro.props;
 
   {
     marqueeItems.length > 0 && (
-      <div class="hero__marquee" aria-label="Proyectos Hiweb" data-marquee>
+      <div class="hero__marquee" aria-label={marqueeAriaLabel} data-marquee>
         <div class="hero__marquee-track" data-marquee-track>
           <div class="hero__marquee-group" data-marquee-group>
             {marqueeItems.map((item) => (
               <div class="hero__marquee-item">
                 <img
-                  src={item.src}
+                  src={stegaClean(item.src)}
                   alt={item.alt}
                   width="320"
                   height="200"
@@ -76,12 +98,11 @@ const { marqueeItems = defaultMarqueeItems } = Astro.props;
               </div>
             ))}
           </div>
-          {/* Decorative clone for seamless loop — hidden from AT / SEO signal */}
           <div class="hero__marquee-group" data-marquee-group aria-hidden="true">
             {marqueeItems.map((item) => (
               <div class="hero__marquee-item">
                 <img
-                  src={item.src}
+                  src={stegaClean(item.src)}
                   alt=""
                   width="320"
                   height="200"

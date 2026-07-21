@@ -3,7 +3,9 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SanityVisualEditing from '../components/SanityVisualEditing';
 import DisableDraftMode from '../components/DisableDraftMode';
-import { isDraftMode } from '../sanity/lib/draft-mode';
+import { isDraftMode, getDraftModeProps } from '../sanity/lib/draft-mode';
+import { loadQuery } from '../sanity/lib/load-query';
+import { siteSettingsQuery } from '../sanity/queries';
 import '../styles/global.css';
 
 interface Props {
@@ -23,6 +25,12 @@ const {
 const siteUrl = Astro.site ?? 'https://www.hiwebmarketing.com';
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
 const draftMode = isDraftMode(Astro.cookies);
+
+const draft = getDraftModeProps(Astro.cookies);
+const { data: siteSettings } = await loadQuery({
+  query: siteSettingsQuery,
+  ...draft,
+});
 ---
 
 <!doctype html>
@@ -59,11 +67,11 @@ const draftMode = isDraftMode(Astro.cookies);
   </head>
   <body>
     <div class="page-wrapper">
-      <Header />
+      <Header header={siteSettings?.header} />
       <main class="main-wrapper">
         <slot />
       </main>
-      <Footer />
+      <Footer footer={siteSettings?.footer} />
     </div>
     {
       draftMode ? (
@@ -78,13 +86,12 @@ const draftMode = isDraftMode(Astro.cookies);
 
 <style>
   .page-wrapper {
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
   }
 
   .main-wrapper {
     flex: 1;
-    width: 100%;
   }
 </style>

@@ -1,11 +1,35 @@
 import { defineArrayMember, defineField, defineType } from 'sanity';
 import { languageField, seoFields, seoGroups } from './shared';
 
+const navLinkMember = defineArrayMember({
+  type: 'object',
+  fields: [
+    defineField({
+      name: 'label',
+      title: 'Texto',
+      type: 'string',
+      validation: (rule) => rule.required(),
+    }),
+    defineField({
+      name: 'href',
+      title: 'URL',
+      type: 'string',
+      validation: (rule) => rule.required(),
+    }),
+  ],
+  preview: {
+    select: { title: 'label', subtitle: 'href' },
+  },
+});
+
 export const siteSettings = defineType({
   name: 'siteSettings',
   title: 'Configuración del sitio',
   type: 'document',
-  groups: seoGroups,
+  groups: [
+    ...seoGroups,
+    { name: 'chrome', title: 'Header / Footer' },
+  ],
   fields: [
     languageField,
     defineField({
@@ -79,10 +103,74 @@ export const siteSettings = defineType({
     }),
     defineField({
       name: 'footerBlurb',
-      title: 'Texto del footer',
+      title: 'Texto del footer (legacy)',
       type: 'text',
       rows: 3,
       group: 'content',
+      hidden: true,
+    }),
+    defineField({
+      name: 'header',
+      title: 'Header / Navbar',
+      type: 'object',
+      group: 'chrome',
+      fields: [
+        defineField({ name: 'brandLabel', title: 'Marca', type: 'string' }),
+        defineField({
+          name: 'navLinks',
+          title: 'Links de navegación',
+          type: 'array',
+          of: [navLinkMember],
+          description: 'Sin mega-menú en esta fase — solo links planos.',
+        }),
+        defineField({ name: 'whatsappLabel', title: 'WhatsApp — texto', type: 'string' }),
+        defineField({ name: 'whatsappHref', title: 'WhatsApp — URL', type: 'string' }),
+        defineField({ name: 'ctaLabel', title: 'CTA — texto', type: 'string' }),
+        defineField({ name: 'ctaHref', title: 'CTA — URL', type: 'string' }),
+      ],
+    }),
+    defineField({
+      name: 'footer',
+      title: 'Footer',
+      type: 'object',
+      group: 'chrome',
+      fields: [
+        defineField({ name: 'brandLabel', title: 'Marca', type: 'string' }),
+        defineField({ name: 'blurb', title: 'Texto intro', type: 'text', rows: 3 }),
+        defineField({ name: 'contactHeading', title: 'Columna contacto — título', type: 'string' }),
+        defineField({ name: 'phoneLabel', title: 'Teléfono — texto', type: 'string' }),
+        defineField({ name: 'phoneHref', title: 'Teléfono — href', type: 'string' }),
+        defineField({ name: 'emailLabel', title: 'Email — texto visible', type: 'string' }),
+        defineField({ name: 'emailHref', title: 'Email — mailto', type: 'string' }),
+        defineField({ name: 'servicesHeading', title: 'Columna servicios — título', type: 'string' }),
+        defineField({
+          name: 'serviceLinks',
+          title: 'Links de servicios',
+          type: 'array',
+          of: [navLinkMember],
+        }),
+        defineField({ name: 'socialHeading', title: 'Columna redes — título', type: 'string' }),
+        defineField({
+          name: 'socialNavLinks',
+          title: 'Links de redes (footer)',
+          type: 'array',
+          of: [navLinkMember],
+        }),
+        defineField({ name: 'presenceHeading', title: 'Columna presencia — título', type: 'string' }),
+        defineField({
+          name: 'presenceLinks',
+          title: 'Links de presencia',
+          type: 'array',
+          of: [navLinkMember],
+        }),
+        defineField({ name: 'localesHeading', title: 'Columna idiomas — título', type: 'string' }),
+        defineField({
+          name: 'localeLinks',
+          title: 'Links de idioma',
+          type: 'array',
+          of: [navLinkMember],
+        }),
+      ],
     }),
     ...seoFields,
   ],

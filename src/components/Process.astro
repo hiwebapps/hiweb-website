@@ -1,7 +1,29 @@
 ---
+import { stegaClean } from '@sanity/client/stega';
 import Button from './Button.astro';
 
-const steps = [
+interface ProcessStep {
+  n?: string;
+  title?: string;
+  body?: string;
+  cardTitle?: string;
+  cardBody?: string;
+  image?: string;
+  imageSrc?: string;
+}
+
+interface ProcessSection {
+  title?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  steps?: ProcessStep[];
+}
+
+interface Props {
+  section?: ProcessSection | null;
+}
+
+const defaultSteps: ProcessStep[] = [
   {
     n: '01',
     title: 'Auditoría y Diagnóstico 360',
@@ -23,7 +45,8 @@ const steps = [
     title: 'Implementación',
     body: 'Ejecutamos: creamos o rediseñamos tu sitio web, hacemos landing pages, optimizamos SEO, generamos campañas, contenidos e implementamos CRM con QA y documentación.',
     cardTitle: 'Seguimiento',
-    cardBody: 'Una vez iniciada la implementación, tendremos seguimientos mensuales constantes para revisar avances, resultados y ROI.',
+    cardBody:
+      'Una vez iniciada la implementación, tendremos seguimientos mensuales constantes para revisar avances, resultados y ROI.',
     image: '/images/dsc_0012.webp',
   },
   {
@@ -35,12 +58,21 @@ const steps = [
     image: '/images/blog-20thumbnail-205.avif',
   },
 ];
+
+const { section } = Astro.props;
+const title = section?.title ?? 'El Proceso: De la Estrategia a la Rentabilidad';
+const ctaLabel = section?.ctaLabel ?? 'Solicita tu auditoría';
+const ctaHref = stegaClean(section?.ctaHref ?? '/contacto');
+const steps = (section?.steps?.length ? section.steps : defaultSteps).map((s) => ({
+  ...s,
+  image: stegaClean(s.imageSrc ?? s.image ?? ''),
+}));
 ---
 
 <section class="process section-pad bg-alt" data-reveal>
   <div class="padding-global">
     <div class="container-large">
-      <h2 class="process__title" data-reveal-item>El Proceso: De la Estrategia a la Rentabilidad</h2>
+      <h2 class="process__title" data-reveal-item>{title}</h2>
 
       <div class="process__grid">
         {
@@ -62,7 +94,7 @@ const steps = [
       </div>
 
       <div class="process__cta" data-reveal-item>
-        <Button href="/contacto" variant="primary">Solicita tu auditoría</Button>
+        <Button href={ctaHref} variant="primary">{ctaLabel}</Button>
       </div>
     </div>
   </div>

@@ -48,5 +48,11 @@ export const resolve: PresentationPluginOptions['resolve'] = {
         locations: [{ title: doc?.title || 'Configuración del sitio', href: '/' }],
       }),
     }),
+    homePage: defineLocations({
+      select: { title: 'title' },
+      resolve: (doc) => ({
+        locations: [{ title: doc?.title || 'Home', href: '/' }],
+      }),
+    }),
   },
 };

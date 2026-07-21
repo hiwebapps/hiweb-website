@@ -1,5 +1,32 @@
 ---
-const services = [
+import { stegaClean } from '@sanity/client/stega';
+
+interface ServiceCard {
+  title?: string;
+  blurb?: string;
+  bullets?: string[];
+  href?: string;
+  ctaHref?: string;
+  cta?: string;
+  ctaLabel?: string;
+  tone?: string;
+}
+
+interface ServicesSection {
+  title?: string;
+  intro?: string;
+  cards?: ServiceCard[];
+  fullWidthTitle?: string;
+  fullWidthBody?: string;
+  fullWidthCtaLabel?: string;
+  fullWidthCtaHref?: string;
+}
+
+interface Props {
+  section?: ServicesSection | null;
+}
+
+const defaultServices: ServiceCard[] = [
   {
     title: 'SEO / AEO (Local y Nacional)',
     blurb: 'Capturamos la demanda de quienes ya están buscando lo que ofreces.',
@@ -79,17 +106,35 @@ const services = [
     tone: 'yellow',
   },
 ];
+
+const { section } = Astro.props;
+const title = section?.title ?? 'Servicios de marketing digital en México';
+const intro =
+  section?.intro ??
+  'Unificamos estrategia, ejecución y medición para escalar demanda y ventas. Elige un servicio o trabaja un stack completo.';
+const services = (section?.cards?.length ? section.cards : defaultServices).map((s) => ({
+  ...s,
+  href: stegaClean(s.ctaHref ?? s.href ?? '#'),
+  cta: s.ctaLabel ?? s.cta ?? 'Ver más',
+  tone: s.tone ?? 'default',
+  bullets: s.bullets ?? [],
+}));
+const fullWidthTitle =
+  section?.fullWidthTitle ?? 'Marketing 360: Deja de contratar servicios separados.';
+const fullWidthBody =
+  section?.fullWidthBody ??
+  'El verdadero escalamiento sucede cuando tus redes, tu web y tu pauta trabajan bajo un mismo objetivo. En Hiweb, nos convertimos en tu departamento de marketing integral para eliminar la fricción operativa y potenciar tu rentabilidad. Si tu empresa está lista para dejar de contratar tareas y empezar a invertir en un sistema, hablemos.';
+const fullWidthCtaLabel =
+  section?.fullWidthCtaLabel ?? 'Solicita un diagnóstico de tus canales digitales';
+const fullWidthCtaHref = stegaClean(section?.fullWidthCtaHref ?? '/contacto');
 ---
 
 <section class="services section-pad bg-cream" data-reveal>
   <div class="padding-global">
     <div class="container-large">
       <header class="services__header" data-reveal-item>
-        <h2>Servicios de marketing digital en México</h2>
-        <p>
-          Unificamos estrategia, ejecución y medición para escalar demanda y ventas. Elige un servicio o trabaja un
-          stack completo.
-        </p>
+        <h2>{title}</h2>
+        <p>{intro}</p>
       </header>
 
       <div class="services__grid">
@@ -120,15 +165,10 @@ const services = [
           ))
         }
 
-        <a href="/contacto" class="service-card service-card--cta" data-reveal-item>
-          <h3>Marketing 360: Deja de contratar servicios separados.</h3>
-          <p>
-            El verdadero escalamiento sucede cuando tus redes, tu web y tu pauta trabajan bajo un mismo objetivo. En
-            <strong>Hiweb</strong>, nos convertimos en tu departamento de marketing integral para eliminar la fricción
-            operativa y potenciar tu rentabilidad. Si tu empresa está lista para dejar de contratar tareas y empezar a
-            invertir en un sistema, hablemos.
-          </p>
-          <span class="service-card__cta">Solicita un diagnóstico de tus canales digitales</span>
+        <a href={fullWidthCtaHref} class="service-card service-card--cta" data-reveal-item>
+          <h3>{fullWidthTitle}</h3>
+          <p>{fullWidthBody}</p>
+          <span class="service-card__cta">{fullWidthCtaLabel}</span>
         </a>
       </div>
     </div>
