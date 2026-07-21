@@ -27,4 +27,7 @@ reference/webflow/
 .DS_Store
 Thumbs.db
 .idea/
+
+# Vercel
 .vercel
+.vercel-fase5-secrets.json
