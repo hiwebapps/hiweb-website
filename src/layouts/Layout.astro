@@ -6,6 +6,7 @@ import ClearStaleDraftMode from '../components/ClearStaleDraftMode';
 import { isDraftMode, getDraftModeProps } from '../sanity/lib/draft-mode';
 import { loadQuery } from '../sanity/lib/load-query';
 import { siteSettingsQuery } from '../sanity/queries';
+import { shouldNoIndex } from '../lib/seo';
 import '../styles/global.css';
 
 interface Props {
@@ -25,6 +26,7 @@ const {
 const siteUrl = Astro.site ?? 'https://www.hiwebmarketing.com';
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
 const draftMode = isDraftMode(Astro.cookies);
+const noindex = shouldNoIndex(Astro.url.hostname);
 
 const draft = getDraftModeProps(Astro.cookies);
 const { data: siteSettings } = await loadQuery({
@@ -39,10 +41,18 @@ const { data: siteSettings } = await loadQuery({
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalUrl} />
-    <link rel="alternate" hrefLang="x-default" href="https://www.hiwebmarketing.com/" />
-    <link rel="alternate" hrefLang="es-MX" href="https://www.hiwebmarketing.com/" />
-    <link rel="alternate" hrefLang="en-US" href="https://www.hiwebmarketing.com/en" />
+    {
+      noindex ? (
+        <meta name="robots" content="noindex, nofollow, noarchive, nosnippet" />
+      ) : (
+        <>
+          <link rel="canonical" href={canonicalUrl} />
+          <link rel="alternate" hrefLang="x-default" href="https://www.hiwebmarketing.com/" />
+          <link rel="alternate" hrefLang="es-MX" href="https://www.hiwebmarketing.com/" />
+          <link rel="alternate" hrefLang="en-US" href="https://www.hiwebmarketing.com/en" />
+        </>
+      )
+    }
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -59,7 +69,7 @@ const { data: siteSettings } = await loadQuery({
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:url" content={noindex ? Astro.url.href : canonicalUrl} />
     <meta property="og:image" content={new URL(ogImage, siteUrl).href} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="generator" content={Astro.generator} />
