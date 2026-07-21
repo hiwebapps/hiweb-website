@@ -2,7 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SanityVisualEditing from '../components/SanityVisualEditing';
-import DisableDraftMode from '../components/DisableDraftMode';
+import ClearStaleDraftMode from '../components/ClearStaleDraftMode';
 import { isDraftMode, getDraftModeProps } from '../sanity/lib/draft-mode';
 import { loadQuery } from '../sanity/lib/load-query';
 import { siteSettingsQuery } from '../sanity/queries';
@@ -77,7 +77,7 @@ const { data: siteSettings } = await loadQuery({
       draftMode ? (
         <>
           <SanityVisualEditing client:only="react" />
-          <DisableDraftMode client:only="react" />
+          <ClearStaleDraftMode client:only="react" />
         </>
       ) : null
     }

@@ -3,9 +3,10 @@ import { perspectiveCookieName } from '@sanity/preview-url-secret/constants';
 
 export const prerender = false;
 
-export const GET: APIRoute = async ({ request, cookies, redirect }) => {
-  const isSecure = new URL(request.url).protocol === 'https:';
-  // Clear with the same attributes used when setting (SameSite/Secure), or browsers keep the cookie.
+function clearPerspectiveCookie(
+  cookies: Parameters<APIRoute>[0]['cookies'],
+  isSecure: boolean,
+) {
   cookies.set(perspectiveCookieName, '', {
     httpOnly: false,
     sameSite: isSecure ? 'none' : 'lax',
@@ -14,5 +15,21 @@ export const GET: APIRoute = async ({ request, cookies, redirect }) => {
     maxAge: 0,
   });
   cookies.delete(perspectiveCookieName, { path: '/' });
-  return redirect('/', 307);
+}
+
+export const GET: APIRoute = async ({ request, cookies, redirect }) => {
+  const url = new URL(request.url);
+  const isSecure = url.protocol === 'https:';
+  clearPerspectiveCookie(cookies, isSecure);
+
+  // Silent clear from the public site (no visible "exit preview" UI).
+  if (url.searchParams.get('silent') === '1') {
+    return new Response(JSON.stringify({ ok: true }), {
+      status: 200,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  const redirectTo = url.searchParams.get('redirect') || '/';
+  return redirect(redirectTo, 307);
 };
