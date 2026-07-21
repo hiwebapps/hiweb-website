@@ -1,6 +1,9 @@
 ---
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import SanityVisualEditing from '../components/SanityVisualEditing';
+import DisableDraftMode from '../components/DisableDraftMode';
+import { isDraftMode } from '../sanity/lib/draft-mode';
 import '../styles/global.css';
 
 interface Props {
@@ -19,6 +22,7 @@ const {
 
 const siteUrl = Astro.site ?? 'https://www.hiwebmarketing.com';
 const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
+const draftMode = isDraftMode(Astro.cookies);
 ---
 
 <!doctype html>
@@ -61,6 +65,14 @@ const canonicalUrl = canonical ?? new URL(Astro.url.pathname, siteUrl).href;
       </main>
       <Footer />
     </div>
+    {
+      draftMode ? (
+        <>
+          <SanityVisualEditing client:only="react" />
+          <DisableDraftMode client:only="react" />
+        </>
+      ) : null
+    }
   </body>
 </html>
 

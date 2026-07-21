@@ -1,23 +1,27 @@
 ---
-import { sanityClient } from 'sanity:client';
+import { stegaClean } from '@sanity/client/stega';
 import Layout from '../../layouts/Layout.astro';
 import PortableText from '../../components/PortableText.astro';
-import { postBySlugQuery, postSlugsQuery } from '../../sanity/queries';
+import { postBySlugQuery } from '../../sanity/queries';
 import { urlFor } from '../../sanity/image';
+import { loadQuery } from '../../sanity/lib/load-query';
+import { getDraftModeProps } from '../../sanity/lib/draft-mode';
 
-export async function getStaticPaths() {
-  return await sanityClient.fetch(postSlugsQuery);
-}
+export const prerender = false;
 
-const { slug } = Astro.params;
-const post = await sanityClient.fetch(postBySlugQuery, { slug });
+const slug = stegaClean(Astro.params.slug ?? '');
+const { data: post } = await loadQuery({
+  query: postBySlugQuery,
+  params: { slug },
+  ...getDraftModeProps(Astro.cookies),
+});
 
 if (!post) {
   return Astro.redirect('/blogs');
 }
 
-const title = post.metaTitle ?? `${post.title} | Hiweb Marketing`;
-const description = post.metaDescription ?? post.excerpt ?? '';
+const title = stegaClean(post.metaTitle ?? `${post.title} | Hiweb Marketing`);
+const description = stegaClean(post.metaDescription ?? post.excerpt ?? '');
 const ogImage = post.ogImage
   ? urlFor(post.ogImage).width(1200).height(630).url()
   : post.mainImage
@@ -41,8 +45,8 @@ const ogImage = post.ogImage
             {post.author?.name ? <span>{post.author.name}</span> : null}
             {
               post.publishedAt ? (
-                <time datetime={post.publishedAt}>
-                  {new Date(post.publishedAt).toLocaleDateString('es-MX', {
+                <time datetime={stegaClean(post.publishedAt)}>
+                  {new Date(stegaClean(post.publishedAt)).toLocaleDateString('es-MX', {
                     year: 'numeric',
                     month: 'long',
                     day: 'numeric',

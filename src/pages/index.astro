@@ -1,5 +1,4 @@
 ---
-import { sanityClient } from 'sanity:client';
 import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import About from '../components/About.astro';
@@ -10,10 +9,16 @@ import Process from '../components/Process.astro';
 import Faq from '../components/Faq.astro';
 import FinalCta from '../components/FinalCta.astro';
 import { faqsQuery, testimonialsQuery } from '../sanity/queries';
+import { loadQuery } from '../sanity/lib/load-query';
+import { getDraftModeProps } from '../sanity/lib/draft-mode';
 
-const [testimonials, faqs] = await Promise.all([
-  sanityClient.fetch(testimonialsQuery),
-  sanityClient.fetch(faqsQuery),
+export const prerender = false;
+
+const draft = getDraftModeProps(Astro.cookies);
+
+const [{ data: testimonials }, { data: faqs }] = await Promise.all([
+  loadQuery({ query: testimonialsQuery, ...draft }),
+  loadQuery({ query: faqsQuery, ...draft }),
 ]);
 ---
 

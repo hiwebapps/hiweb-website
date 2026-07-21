@@ -1,10 +1,17 @@
 ---
-import { sanityClient } from 'sanity:client';
+import { stegaClean } from '@sanity/client/stega';
 import Layout from '../../layouts/Layout.astro';
 import { postsQuery } from '../../sanity/queries';
 import { urlFor } from '../../sanity/image';
+import { loadQuery } from '../../sanity/lib/load-query';
+import { getDraftModeProps } from '../../sanity/lib/draft-mode';
 
-const posts = await sanityClient.fetch(postsQuery);
+export const prerender = false;
+
+const { data: posts } = await loadQuery({
+  query: postsQuery,
+  ...getDraftModeProps(Astro.cookies),
+});
 ---
 
 <Layout
@@ -23,42 +30,45 @@ const posts = await sanityClient.fetch(postsQuery);
         {
           posts?.length ? (
             <ul class="blog-index__grid">
-              {posts.map((post) => (
-                <li>
-                  <a href={`/blogs/${post.slug}`} class="blog-card">
-                    {post.mainImage ? (
-                      <img
-                        src={urlFor(post.mainImage).width(640).height(400).url()}
-                        alt={post.mainImage.alt ?? post.title}
-                        class="blog-card__image"
-                        width="640"
-                        height="400"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div class="blog-card__placeholder" />
-                    )}
-                    <div class="blog-card__body">
-                      {post.categories?.length ? (
-                        <p class="blog-card__cats">
-                          {post.categories.map((c) => c?.title).filter(Boolean).join(' · ')}
-                        </p>
-                      ) : null}
-                      <h2>{post.title}</h2>
-                      {post.excerpt ? <p>{post.excerpt}</p> : null}
-                      {post.publishedAt ? (
-                        <time datetime={post.publishedAt}>
-                          {new Date(post.publishedAt).toLocaleDateString('es-MX', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                          })}
-                        </time>
-                      ) : null}
-                    </div>
-                  </a>
-                </li>
-              ))}
+              {posts.map((post) => {
+                const slug = stegaClean(post.slug);
+                return (
+                  <li>
+                    <a href={`/blogs/${slug}`} class="blog-card">
+                      {post.mainImage ? (
+                        <img
+                          src={urlFor(post.mainImage).width(640).height(400).url()}
+                          alt={post.mainImage.alt ?? post.title}
+                          class="blog-card__image"
+                          width="640"
+                          height="400"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div class="blog-card__placeholder" />
+                      )}
+                      <div class="blog-card__body">
+                        {post.categories?.length ? (
+                          <p class="blog-card__cats">
+                            {post.categories.map((c) => c?.title).filter(Boolean).join(' · ')}
+                          </p>
+                        ) : null}
+                        <h2>{post.title}</h2>
+                        {post.excerpt ? <p>{post.excerpt}</p> : null}
+                        {post.publishedAt ? (
+                          <time datetime={stegaClean(post.publishedAt)}>
+                            {new Date(stegaClean(post.publishedAt)).toLocaleDateString('es-MX', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric',
+                            })}
+                          </time>
+                        ) : null}
+                      </div>
+                    </a>
+                  </li>
+                );
+              })}
             </ul>
           ) : (
             <p class="empty">Aún no hay artículos publicados. Créalos en /admin.</p>

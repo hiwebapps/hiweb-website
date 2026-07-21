@@ -8,8 +8,8 @@ Ver [AGENTS.md](AGENTS.md) para el mapa completo del proyecto (obligatorio para 
 
 | Capa | Tecnología |
 |------|------------|
-| Frontend | Astro 7 (SSG) |
-| CMS | Sanity (`fxardjr1` / `production`) — Studio en `/admin` |
+| Frontend | Astro 7 (SSR en Vercel — Visual Editing) |
+| CMS | Sanity (`fxardjr1` / `production`) — Studio en `/admin` + Presentation |
 | Animaciones | GSAP |
 | Hosting | Vercel |
 | Repo | [hiwebapps/hiweb-website](https://github.com/hiwebapps/hiweb-website) |
@@ -17,19 +17,22 @@ Ver [AGENTS.md](AGENTS.md) para el mapa completo del proyecto (obligatorio para 
 ## Setup local
 
 ```bash
-cp .env.example .env   # ya tiene projectId/dataset
+cp .env.example .env   # projectId/dataset + SANITY_API_READ_TOKEN (Viewer)
 npm install
 npm run dev
 ```
 
 - Sitio: http://localhost:4321  
-- Studio: http://localhost:4321/admin  
+- Studio: http://localhost:4321/admin → **Presentation** para preview visual  
+
+Guía: [docs/VISUAL-EDITING.md](docs/VISUAL-EDITING.md). En Vercel (Production + Preview) añade la misma `SANITY_API_READ_TOKEN`.
 
 ## Scripts
 
 | Comando | Acción |
 |---------|--------|
-| `npm run dev` | Dev server |
+| `npm run dev` | Dev server Astro |
+| `npm run studio` | Sanity Studio standalone (alternativa local si `/admin` falla) |
 | `npm run build` | Build de producción |
 | `npm run preview` | Preview del build |
 

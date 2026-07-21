@@ -1,86 +1,89 @@
 # Fase 5 — Deploy Vercel + workflow editorial
 
-## Producción
+## Producción (team Hiweb)
 
 | Item | Valor |
 |------|--------|
-| URL | https://hiweb-website.vercel.app |
-| Proyecto Vercel | `jahir-gosu/hiweb-website` |
-| Project ID | `prj_du7JnlfF0ssEjAKqg2do9jbrPUv2` |
-| Org / team ID | `team_I6QdDV4mRCHypqM6pWap20rA` |
+| URL producción | https://hiweb-website-xi.vercel.app |
+| Studio | https://hiweb-website-xi.vercel.app/admin |
+| Team Vercel | **Hiweb** (`team_gkiLLQv9laYqwef1UaTvRazB`) |
+| Repo | `hiwebapps/hiweb-website` (Git conectado) |
 | Sanity | `fxardjr1` / `production` |
-| Studio | https://hiweb-website.vercel.app/admin |
+| Proyecto Vercel | `prj_YXfVbxPMBzpF54ZpgIexpm1lIxop` |
 
-> Nota: el CLI de Vercel autenticado en esta máquina usa el team **jahir-gosu**. El team **Hiweb** del MCP aún no tenía proyectos; el deploy se hizo en la cuenta disponible. Cuando conectes GitHub (`hiwebapps/hiweb-website`) desde el dashboard de Vercel con una cuenta que tenga acceso al org, los deploys por push a `main` quedarán automáticos.
+### Deployment Protection
 
-## Env vars en Vercel (Production + Preview)
+Si la URL pide login de Vercel: **Settings → Deployment Protection** → desactivar en Production (o solo Preview).
 
-- `PUBLIC_SANITY_PROJECT_ID`
-- `PUBLIC_SANITY_DATASET`
-- `SANITY_STUDIO_PROJECT_ID`
-- `SANITY_STUDIO_DATASET`
-- `SANITY_REVALIDATE_SECRET` (sensitive)
-- `VERCEL_TOKEN` (sensitive — token personal de Vercel)
-- `VERCEL_PROJECT_ID`
-- `VERCEL_ORG_ID`
+## Env vars (Production + Preview)
+
+Obligatorias:
+
+- `PUBLIC_SANITY_PROJECT_ID` = `fxardjr1`
+- `PUBLIC_SANITY_DATASET` = `production`
+- `SANITY_STUDIO_PROJECT_ID` = `fxardjr1`
+- `SANITY_STUDIO_DATASET` = `production`
+- `SANITY_API_READ_TOKEN` = token Viewer (Visual Editing / Presentation)
+
+Opcional: `SANITY_STUDIO_PREVIEW_URL` = `https://hiweb-website-xi.vercel.app`
+
+Con SSR (`output: 'server'`), el contenido **publicado** se lee en cada request — el Deploy Hook ya no es obligatorio para ver texto nuevo. Sigue útil tras cambios de código. Preview visual: ver [VISUAL-EDITING.md](./VISUAL-EDITING.md).
+
+## Rebuild editorial — Deploy Hook + webhook Sanity
+
+Deploy Hook de Vercel: ya creado (Settings → Git → Deploy Hooks → `sanity-publish` / branch `main`).  
+**No pegues la URL del Deploy Hook en chats ni docs** — cualquiera con el link puede disparar un deploy.
+
+### Crear el webhook en Sanity
+
+1. [sanity.io/manage](https://www.sanity.io/manage) → proyecto `fxardjr1` → **API → Webhooks** → Create.
+2. Config:
+   - **Name:** `vercel-rebuild`
+   - **URL:** pegar el Deploy Hook de Vercel
+   - **Dataset:** `production`
+   - **Trigger:** Create + Update + Delete
+   - **Drafts / versions:** off
+   - **Filter:** `_type in ["post","author","category","testimonial","faq","siteSettings"]`
+   - **Projection:** `{_id,_type}`
+   - **HTTP method:** POST
+
+### Si Manage / API de hooks falla (503)
+
+Incidente Sanity en curso: **[Issue Viewing Webhooks](https://www.sanity-status.com)** (`Webhooks: partial_outage`) — la página/API de hooks no carga ni deja crear. No es un error de tu config.
+
+**Workaround temporal:** después de publicar en Studio, dispara un rebuild con:
+
+```bash
+curl -X POST "<TU_DEPLOY_HOOK_URL>"
+```
+
+(o abre la URL del Deploy Hook en el navegador). Estado: [sanity-status.com](https://www.sanity-status.com). Cuando vuelva a `operational`, crea el webhook con la config de arriba.
+
+Verificado: el Deploy Hook responde **201** y encola deploy en Vercel.
+
+### Alternativa — `/api/sanity-webhook`
+
+Solo si prefieres no usar Deploy Hook:
+
+- Env: `SANITY_REVALIDATE_SECRET`, `VERCEL_TOKEN`, `VERCEL_PROJECT_ID`, `VERCEL_ORG_ID` (`team_gkiLLQv9laYqwef1UaTvRazB`)
+- Webhook Sanity → `POST https://hiweb-website-xi.vercel.app/api/sanity-webhook`
+- Header: `Authorization: Bearer <SANITY_REVALIDATE_SECRET>`
+
+(También depende de la API de hooks de Sanity para crearse.)
 
 ## CORS Sanity
 
 Orígenes con credentials:
 
-- `https://hiweb-website.vercel.app`
+- `https://hiweb-website-xi.vercel.app`
 - `https://*.vercel.app`
+- (legacy) `https://hiweb-website-dg6tjesyv-hiweb.vercel.app`
 
-## Rebuild al publicar (Sanity → Vercel)
+## Deploy anterior (jahir-gosu)
 
-No hay Deploy Hook de Git todavía (el proyecto no está linkeado al repo). En su lugar:
+`jahir-gosu/hiweb-website` → https://hiweb-website.vercel.app — archivable cuando Hiweb sea la fuente de verdad.
 
-1. Endpoint serverless: `POST https://hiweb-website.vercel.app/api/sanity-webhook`
-2. Header: `Authorization: Bearer <SANITY_REVALIDATE_SECRET>`
-3. El endpoint llama a la API de Vercel para **redeploy** de producción (nuevo build SSG que vuelve a fetch Sanity).
+## Siguiente
 
-### Crear el webhook en Sanity Manage
-
-La API de hooks de Sanity devolvió **503** durante el setup. Créalo a mano:
-
-1. Abre https://www.sanity.io/manage/project/fxardjr1/api/webhooks  
-2. **Create webhook**
-   - Name: `Trigger Vercel rebuild`
-   - URL: `https://hiweb-website.vercel.app/api/sanity-webhook`
-   - Dataset: `production`
-   - Trigger: Create + Update + Delete (drafts off)
-   - Filter: `_type in ["post","author","category","testimonial","faq","siteSettings"]`
-   - Projection: `{_id,_type}`
-   - Method: `POST`
-   - Header: `Authorization` = `Bearer <mismo SANITY_REVALIDATE_SECRET que en Vercel>`
-3. Guarda y usa **Test webhook** o publica un documento.
-
-### Probar el endpoint
-
-```bash
-curl -X POST https://hiweb-website.vercel.app/api/sanity-webhook \
-  -H "Authorization: Bearer $SANITY_REVALIDATE_SECRET" \
-  -H "Content-Type: application/json" \
-  -d '{"_type":"faq"}'
-```
-
-Respuesta esperada: `{ "ok": true, "deploymentId": "...", "url": "..." }`.
-
-## Checklist editorial (validado)
-
-- [x] Home + `/blogs` + `/admin` en producción
-- [x] Publish de FAQ + `POST /api/sanity-webhook` → nuevo deployment Ready
-- [x] Contenido actualizado visible en https://hiweb-website.vercel.app
-
-## Deploy local / CLI
-
-```bash
-npx vercel link --yes --scope jahir-gosu --project hiweb-website
-npx vercel deploy --prod --yes
-```
-
-## Siguiente (post-Fase 5)
-
-- Conectar GitHub `hiwebapps/hiweb-website` en Vercel (Deploy Hooks nativos).
-- Apuntar `www.hiwebmarketing.com` / DNS cutover.
-- Rotar `VERCEL_TOKEN` a un token dedicado de equipo (no el token de sesión del CLI).
+- Cuando Sanity Hooks API esté OK → crear webhook `vercel-rebuild`.
+- Cutover DNS `www.hiwebmarketing.com` cuando toque.
